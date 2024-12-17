@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://c4scm7lx45l75"]
+
+[ext_resource type="Texture2D" uid="uid://c8e5ic245f2u5" path="res://Content/Player/PlayerJumpEffect.png" id="1_0j4l5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_284vi"]
+atlas = ExtResource("1_0j4l5")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rvout"]
+atlas = ExtResource("1_0j4l5")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ljoru"]
+atlas = ExtResource("1_0j4l5")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_so37v"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_284vi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rvout")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ljoru")
+}],
+"loop": false,
+"name": &"JumpEffect",
+"speed": 20.0
+}]
+
+[node name="PlayerJumpEffect" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_so37v")
+animation = &"JumpEffect"
+frame = 2
+frame_progress = 1.0

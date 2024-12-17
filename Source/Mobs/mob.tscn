@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://buxndiiiw0s17"]
+
+[ext_resource type="Script" path="res://Source/Mobs/Mob.cs" id="1_acc70"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q2gvq"]
+size = Vector2(15, 15)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y1hj4"]
+size = Vector2(15, 15)
+
+[node name="Mob" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_acc70")
+MobType = 2
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1.5)
+shape = SubResource("RectangleShape2D_q2gvq")
+
+[node name="AttackRange" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRange"]
+position = Vector2(0, 1.5)
+shape = SubResource("RectangleShape2D_y1hj4")
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
+[connection signal="body_entered" from="AttackRange" to="." method="_on_player_entered"]

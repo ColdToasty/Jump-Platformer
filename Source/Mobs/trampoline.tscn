@@ -1,0 +1,42 @@
+[gd_scene load_steps=3 format=3 uid="uid://bcxtjjcg8o807"]
+
+[ext_resource type="PackedScene" uid="uid://buxndiiiw0s17" path="res://Source/Mobs/mob.tscn" id="1_1hudq"]
+
+[sub_resource type="CSharpScript" id="CSharpScript_g7vax"]
+script/source = "using Godot;
+using System;
+
+public partial class Trampoline : Mob
+{
+	public override void _PhysicsProcess(double delta)
+	{
+
+
+	}
+
+
+
+    public override void _on_player_entered(Player player)
+    {
+
+        animatedSprite.Play(\"Bounce\");
+        mobState = MobState.Attack;
+
+        attackRange.SetDeferred(\"monitoring\", false);
+    }
+
+    public override void _on_animated_sprite_2d_animation_finished()
+    {
+        mobState = MobState.Move;
+        attackRange.SetDeferred(\"monitoring\", true);
+    }
+
+
+
+
+
+}
+"
+
+[node name="Trampoline" instance=ExtResource("1_1hudq")]
+script = SubResource("CSharpScript_g7vax")
