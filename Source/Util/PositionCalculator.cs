@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 
 namespace Platformer.Source.Util
 {
+    //
+    // Summary:
+    //     1st Vector2 is the tile position index in mod TileSize,
+    //     2nd Vector2 is top left corner of global position in multiples of TileSize ---- is fucked
     internal class PositionCalculator
     {
 
         public const int TileSize = 16;
 
-        //1st Vector2 is the tile position index in multiples of TileSize,
-        //2nd Vector2 is top left corner of global position in multiples of TileSize
         public static (Vector2, Vector2) GetPosition(Vector2 position)
         {
 

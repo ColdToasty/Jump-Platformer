@@ -7,7 +7,8 @@ using System.Linq;
 
 public partial class Mob : CharacterBody2D
 {
-	public const float Speed = 50.0f;
+    [Export]
+    public float Speed = 50.0f;
 
     [Export]
 	protected bool moveLeft;
@@ -76,12 +77,12 @@ public partial class Mob : CharacterBody2D
             velocity.X = direction * Speed;
 
             Velocity = velocity;
-            MoveAndSlide();
+            bool isColliding = MoveAndSlide();
 
 
             Vector2I position = (Vector2I)PositionCalculator.GetPosition(this.GlobalPosition).Item1;
 
-            HashSet<Vector2I> surroundingCells = this.GetParent<LevelBase>().GetSurroundingCellsInTileSizeCoOrds(position).ToHashSet<Vector2I>();
+            HashSet<Vector2I> surroundingCells = this.GetParent<LevelBase>().GetSurroundingCellsInTileSizeCoOrds().ToHashSet<Vector2I>();
 
 
 
@@ -124,7 +125,11 @@ public partial class Mob : CharacterBody2D
 
     public virtual void _on_player_entered(Player player)
     {
-        if (moveLeft)
+        //Gets the direction of the mob from player position
+        Vector2 normal = (this.GlobalPosition - player.GlobalPosition).Normalized().Round();
+
+
+        if (normal.X == 1)
         {
             animatedSprite.Play("AttackLeft");
             mobState = MobState.Attack;

@@ -1,0 +1,66 @@
+[gd_scene load_steps=7 format=3 uid="uid://rt4f8quufofn"]
+
+[ext_resource type="Script" path="res://Source/LoreDropper/LoreDropper.cs" id="1_gkjwv"]
+[ext_resource type="Texture2D" uid="uid://cucravwqhx6wm" path="res://Content/LoreDropper/LoreDropper.png" id="2_hll8c"]
+[ext_resource type="FontFile" uid="uid://cgfvrtvuhtotb" path="res://Content/Fonts/Roboto/Roboto-Regular.ttf" id="3_d0072"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qpytx"]
+atlas = ExtResource("2_hll8c")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jtas0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qpytx")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1mynk"]
+size = Vector2(32, 16)
+
+[node name="LoreDropper" type="CharacterBody2D"]
+collision_layer = 64
+collision_mask = 2
+script = ExtResource("1_gkjwv")
+labelText = "How many days has it been? All I can remember eating is butter. Butter for breakfast, lunch and dinner. I do not remember the taste of anything besides butter. I cannot get up because I keep sliding. This is the 47th time I've reached this exact spot. Why is the floor buttered? I only know that I can cannot quit now and be forever disgraced. I will reach the summit to claim what is rightfully mine! One day..."
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_jtas0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 64
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_1mynk")
+
+[node name="Container" type="HBoxContainer" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -8.0
+offset_top = -56.0
+offset_right = 120.0
+offset_bottom = -8.0
+grow_vertical = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Container"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/normal_font = ExtResource("3_d0072")
+theme_override_font_sizes/normal_font_size = 5
+scroll_active = false
+autowrap_mode = 2
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_player_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_player_exited"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

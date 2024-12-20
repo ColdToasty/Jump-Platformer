@@ -1,53 +1,66 @@
 using Godot;
 using Platformer.Source.Util;
 using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using static Godot.TextServer;
 
 public partial class Player : CharacterBody2D
 {
-    public const float MoveSpeed = 125.0f;
-    public const float JumpSpeed = 125.0f;
-    public const float JumpVelocity = -300.0f;
+    [Signal]
+    public delegate void PlayerJumpEventHandler();
+
+    public enum Direction { Default, Left, Right, Portal }
+    public enum CharacterState { Grounded, Falling, Jumping }
+
+    private Random random;
+
+    public const float MoveSpeed = 100.0f;
+    public const float JumpSpeed = 100.0f;
+    public const float JumpVelocity = -310.0f;
 
     [Export]
-    private float knockBackVelocity = -300.0f;
+    private float knockBackVelocity = -400.0f;
+    [Export]
+    private float knockBackSpeed = 150.0f;
 
     private AnimatedSprite2D animatedSprite;
 
-    public enum Direction { Default, Left, Right, Portal }
+    private Area2D collisionDetectionArea;
+    private CollisionShape2D collisionShape;
 
-    public Direction FaceDirection {get; private set;}
+
+
+    public Direction FaceDirection { get; private set; }
+    public CharacterState CurrentCharacterState { get; private set; }
+
 
     private bool isHitByCroc;
     private bool knockback;
-    private  bool wallKnock;
-
+    private bool wallKnock;
+    private bool canMove;
 
     private Vector2 hitDirection;
 
-    public enum CharacterState { Grounded, Falling, Jumping}
-
-    public CharacterState CurrentCharacterState { get; private set; }
-
-    private Area2D collisionDetectionArea;
 
 
 
-    [Signal]
-    public delegate void PlayerJumpEventHandler();
 
     public override void _Ready()
     {
         base._Ready();
         animatedSprite = this.GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         collisionDetectionArea = this.GetNode<Area2D>("CollisionArea");
+        collisionShape = this.GetNode<CollisionShape2D>("CollisionShape2D");
         FaceDirection = Direction.Default;
         CurrentCharacterState = CharacterState.Grounded;
         isHitByCroc = false;
         knockback = false;
         wallKnock = false;
+        canMove = true;
         hitDirection = Vector2.Zero;
-
+        random = new Random();
     }
 
     public override void _PhysicsProcess(double delta)
@@ -77,17 +90,17 @@ public partial class Player : CharacterBody2D
                 {
                     wallKnock = false;
                 }
-
                 CurrentCharacterState = CharacterState.Grounded;
+                canMove = true;
             }
 
 
             if (knockback)
             {
                 velocity.Y = knockBackVelocity;
-                velocity.X = JumpSpeed * hitDirection.X;
+                velocity.X = knockBackSpeed * hitDirection.X;
                 knockback = false;
-
+                canMove = false;
                 if (hitDirection.X < 0)
                 {
                     this.FaceDirection = Direction.Left;
@@ -101,7 +114,7 @@ public partial class Player : CharacterBody2D
             }
             else
             {
-                if (!wallKnock)
+                if (!wallKnock & canMove)
                 {
 
                     // Get the input direction and handle the movement/deceleration.
@@ -121,7 +134,9 @@ public partial class Player : CharacterBody2D
 
                     if (direction != Vector2.Zero && CurrentCharacterState == CharacterState.Grounded)
                     {
+ 
                         velocity.X = direction.X * MoveSpeed;
+                        
 
                         if (direction.X < 0)
                         {
@@ -140,16 +155,20 @@ public partial class Player : CharacterBody2D
                             if (FaceDirection == Direction.Left)
                             {
                                 animatedSprite.Play("IdleLeft");
+     
                             }
                             else if (FaceDirection == Direction.Right)
                             {
                                 animatedSprite.Play("IdleRight");
+  
                             }
                             else
                             {
                                 animatedSprite.Play("Idle");
                             }
                         }
+
+
 
                     }
 
@@ -178,6 +197,7 @@ public partial class Player : CharacterBody2D
                     if (Input.IsActionPressed("Jump") && CurrentCharacterState == CharacterState.Grounded)
                     {
                         FaceDirection = Direction.Default;
+
                         animatedSprite.Play("Jump");
                         velocity.X = Mathf.MoveToward(Velocity.X, 0, MoveSpeed);
                     }
@@ -192,6 +212,8 @@ public partial class Player : CharacterBody2D
                 }
             }
 
+
+            GD.Print(canMove);
             Velocity = velocity;
             bool isColliding = MoveAndSlide();
 
@@ -207,7 +229,7 @@ public partial class Player : CharacterBody2D
                 }
                 else if(collisionObject is Mob)
                 {
-                    SetMobKnockBack(collision);
+     
                 }
    
 
@@ -225,6 +247,23 @@ public partial class Player : CharacterBody2D
             hitDirection = goLeft < 0 ? Vector2.Left : Vector2.Right;
             knockback = true;
             wallKnock = true;
+            if (collision.GetNormal().Y > 0)
+            {
+                if(goLeft == 0)
+                {
+                    Vector2 direction = Vector2.Zero;
+                    if(FaceDirection == Direction.Left)
+                    {
+                        direction = Vector2.Left;
+                    }
+                    else if(FaceDirection == Direction.Right)
+                    {
+                        direction = Vector2.Right;
+                    }
+
+                    hitDirection = direction;
+                }
+            }
         }
     }
 
@@ -232,7 +271,6 @@ public partial class Player : CharacterBody2D
     {
         float goLeft = collision.GetNormal().X;
         hitDirection = goLeft < 0 ? Vector2.Left : Vector2.Right;
-        knockback = true;
 
         Mob mob = (Mob)collision.GetCollider();
 
@@ -241,6 +279,7 @@ public partial class Player : CharacterBody2D
             animatedSprite.Play("Portal");
             FaceDirection = Direction.Portal;
             collisionDetectionArea.SetDeferred("monitoring", false);
+            collisionShape.SetDeferred("disabled", true);
         }
         else
         {
@@ -248,13 +287,74 @@ public partial class Player : CharacterBody2D
         }
     }
 
+
+
+    public void _on_collision_area_body_entered(Mob mob)
+    {
+        Vector2 normal = (this.GlobalPosition - mob.GlobalPosition).Normalized().Round();
+
+        float goLeft = normal.X;
+        hitDirection = goLeft < 0 ? Vector2.Left : Vector2.Right;
+
+        if (mob.MobType == Mob.TypeOfMob.Magician)
+        {
+            animatedSprite.Play("Portal");
+            FaceDirection = Direction.Portal;
+            collisionDetectionArea.SetDeferred("monitoring", false);
+            collisionShape.SetDeferred("disabled", true);
+        }
+        else
+        {
+            knockback = true;
+        }
+
+    }
+
+
     public void _on_animated_sprite_2d_animation_finished()
     {
         if (FaceDirection == Direction.Portal)
         {
-
             FaceDirection = Direction.Default;
             collisionDetectionArea.SetDeferred("monitoring", true);
+            collisionShape.SetDeferred("disabled", false);
+            Vector2 playerTilePosition = PositionCalculator.GetPosition(this.GlobalPosition).Item1;
+
+            HashSet<Vector2I> usedCells = this.GetParent<LevelBase>().GetSurroundingCellsInTileSizeCoOrds().ToHashSet<Vector2I>();
+
+
+
+            Vector2I teleportedPosition = Vector2I.Zero;
+            int y = 4;
+
+            while (true)
+            {
+                int x;
+                if (hitDirection == Vector2.Right)
+                {
+                    x = random.Next(2, 4);
+                }
+                else
+                {
+                    x = random.Next(-4, -1);
+                }
+                //Check if there is a tile present
+                teleportedPosition = new Vector2I((int)playerTilePosition.X + x, (int)playerTilePosition.Y + y);
+    
+                if (!usedCells.Contains(teleportedPosition))
+                {
+                    Vector2 newPosition  = new Vector2(teleportedPosition.X * PositionCalculator.TileSize, teleportedPosition.Y * PositionCalculator.TileSize);
+
+                    this.GlobalPosition = newPosition;
+                    break;
+                }
+      
+            }
+
+
+
+
+            //if Position has a tile then Y+5 and so on
         }
     }
 

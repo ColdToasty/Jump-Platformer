@@ -1,0 +1,113 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Github\\Jump-Platformer\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|d:\\github\\jump-platformer\\source\\loredropper\\loredropper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|solutionrelative:source\\loredropper\\loredropper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|d:\\github\\jump-platformer\\source\\platforms\\platform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|solutionrelative:source\\platforms\\platform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|d:\\github\\jump-platformer\\source\\levels\\levelbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|solutionrelative:source\\levels\\levelbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|d:\\github\\jump-platformer\\source\\player\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|solutionrelative:source\\player\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 678,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1332508196:0:{83107a3e-496a-485e-b455-16ddb978e55e}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "LoreDropper.cs",
+              "DocumentMoniker": "D:\\Github\\Jump-Platformer\\Source\\LoreDropper\\LoreDropper.cs",
+              "RelativeDocumentMoniker": "Source\\LoreDropper\\LoreDropper.cs",
+              "ToolTip": "D:\\Github\\Jump-Platformer\\Source\\LoreDropper\\LoreDropper.cs",
+              "RelativeToolTip": "Source\\LoreDropper\\LoreDropper.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-18T03:53:41.938Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "LevelBase.cs",
+              "DocumentMoniker": "D:\\Github\\Jump-Platformer\\Source\\Levels\\LevelBase.cs",
+              "RelativeDocumentMoniker": "Source\\Levels\\LevelBase.cs",
+              "ToolTip": "D:\\Github\\Jump-Platformer\\Source\\Levels\\LevelBase.cs",
+              "RelativeToolTip": "Source\\Levels\\LevelBase.cs",
+              "ViewState": "AgIAAFIAAAAAAAAAAAAgwBEAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-18T01:08:20.166Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Player.cs",
+              "DocumentMoniker": "D:\\Github\\Jump-Platformer\\Source\\Player\\Player.cs",
+              "RelativeDocumentMoniker": "Source\\Player\\Player.cs",
+              "ToolTip": "D:\\Github\\Jump-Platformer\\Source\\Player\\Player.cs",
+              "RelativeToolTip": "Source\\Player\\Player.cs",
+              "ViewState": "AgIAAC4BAAAAAAAAAAAIwNQAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-17T23:53:04.348Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Platform.cs",
+              "DocumentMoniker": "D:\\Github\\Jump-Platformer\\Source\\Platforms\\Platform.cs",
+              "RelativeDocumentMoniker": "Source\\Platforms\\Platform.cs",
+              "ToolTip": "D:\\Github\\Jump-Platformer\\Source\\Platforms\\Platform.cs",
+              "RelativeToolTip": "Source\\Platforms\\Platform.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAwwDcAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-17T23:34:25.245Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

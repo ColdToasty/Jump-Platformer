@@ -3,9 +3,9 @@
 [ext_resource type="Script" path="res://Source/Levels/LevelBase.cs" id="1_ajt4f"]
 [ext_resource type="Texture2D" uid="uid://21puoe3y1pps" path="res://Content/Tilemap/Assets.png" id="1_f47hq"]
 [ext_resource type="PackedScene" uid="uid://d2doj656dvye3" path="res://Source/Player/player.tscn" id="2_y4d7x"]
-[ext_resource type="PackedScene" uid="uid://dplkosein6sym" path="res://Source/Mobs/croc.tscn" id="4_6l2ww"]
+[ext_resource type="PackedScene" uid="uid://dplkosein6sym" path="res://Source/Mobs/croc.tscn" id="3_pkv8u"]
 [ext_resource type="PackedScene" uid="uid://cbg7arvpltkyn" path="res://Source/Mobs/spinningWheel.tscn" id="4_a83gr"]
-[ext_resource type="PackedScene" uid="uid://ctbm18wfgpjxc" path="res://Source/Mobs/magician.tscn" id="5_tmy77"]
+[ext_resource type="PackedScene" uid="uid://rt4f8quufofn" path="res://Source/LoreDropper/LoreDropper.tscn" id="4_kpaye"]
 [ext_resource type="PackedScene" uid="uid://bjslxit7q81c" path="res://Source/Platforms/Platform.tscn" id="6_4fsgc"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wqa67"]
@@ -21,14 +21,32 @@ texture = ExtResource("1_f47hq")
 4:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 7:0/0 = 0
 7:0/0/terrain_set = 1
+7:0/0/physics_layer_0/linear_velocity = Vector2(-30, 0)
+7:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, 8, 8, 0, 8, 8, -8, 8)
+7:0/0/custom_data_0 = true
+7:0/0/custom_data_3 = true
+7:0/0/custom_data_4 = true
 8:0/0 = 0
 8:0/0/terrain_set = 1
+8:0/0/physics_layer_0/linear_velocity = Vector2(-30, 0)
+8:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, 0, 8, -8, 8, 8, -8, 8)
+8:0/0/custom_data_0 = true
+8:0/0/custom_data_3 = true
+8:0/0/custom_data_4 = true
 9:0/0 = 0
 9:0/0/terrain_set = 1
+9:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+9:0/0/custom_data_0 = true
 10:0/0 = 0
 10:0/0/terrain_set = 1
+10:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, 0, 8, 8, -8, 8)
+10:0/0/custom_data_0 = true
+10:0/0/custom_data_3 = true
 11:0/0 = 0
 11:0/0/terrain_set = 1
+11:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, 0, 8, 8, 8, 8, -8, 8)
+11:0/0/custom_data_0 = true
+11:0/0/custom_data_3 = true
 13:0/0 = 0
 14:0/0 = 0
 15:0/0 = 0
@@ -433,40 +451,59 @@ terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
 terrain_set_1/mode = 0
 terrain_set_1/terrain_0/name = "CurvedGround"
 terrain_set_1/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
+custom_data_layer_0/name = "Slide"
+custom_data_layer_0/type = 1
+custom_data_layer_1/name = "Slow"
+custom_data_layer_1/type = 1
+custom_data_layer_2/name = "QuickSand"
+custom_data_layer_2/type = 1
+custom_data_layer_3/name = "Diagonal"
+custom_data_layer_3/type = 1
+custom_data_layer_4/name = "LeftDiagonal"
+custom_data_layer_4/type = 1
 sources/0 = SubResource("TileSetAtlasSource_wqa67")
 
 [node name="LevelBase" type="Node2D"]
 script = ExtResource("1_ajt4f")
+slideVelocity = Vector2(50, 0)
+diagonalSlideVelocityAdditive = Vector2(30, 0)
 
 [node name="Parallax2D" type="Parallax2D" parent="."]
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="Parallax2D"]
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAABAAEAAAABAAEAAAACAAEAAAABAAEAAAAAAAEAAAABAAEAAAADAAEAAAAFAAEAAAAEAAEAAAAFAAEAAAAAAP//AAAFAAEAAAD//wEAAAACAAEAAAD+/wEAAAACAAEAAAD9/wEAAAACAAEAAAD8/wEAAAACAAEAAAD7/wEAAAABAAEAAAD6/wAAAAAFAAEAAAD6////AAAFAAEAAAD6//7/AAAFAAEAAAD6//3/AAAFAAEAAAAFAAEAAAAEAAEAAAAGAAEAAAAEAAEAAAAHAAEAAAAEAAEAAAAIAAEAAAAEAAEAAAAJAAEAAAAEAAEAAAAKAAEAAAAEAAEAAAALAAEAAAAFAAEAAAALAAAAAAAFAAEAAAALAP//AAAFAAEAAAALAP7/AAAFAAEAAAD6//z/AAAFAAEAAAD6//v/AAAFAAEAAAD6//r/AAAFAAEAAAD6//n/AAAFAAEAAAALAP3/AAAFAAEAAAALAPz/AAAFAAEAAAALAPv/AAAFAAEAAAAKAPn/AAAFAAEAAAALAPr/AAAFAAEAAAAKAPj/AAAFAAEAAAAJAPf/AAAFAAEAAAAJAPb/AAAFAAEAAAAAAPv/AAAFAAEAAAAEAP7/AAAFAAEAAAAGAPv/AAAFAAEAAAA=")
+tile_map_data = PackedByteArray("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")
 tile_set = SubResource("TileSet_st8hi")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(8, -27)
+position = Vector2(24, 208)
 zoom = Vector2(4, 4)
+
+[node name="Croc" parent="." instance=ExtResource("3_pkv8u")]
+position = Vector2(56, -120)
+
+[node name="Croc2" parent="." instance=ExtResource("3_pkv8u")]
+position = Vector2(64, 96)
+
+[node name="Croc3" parent="." instance=ExtResource("3_pkv8u")]
+position = Vector2(64, 208)
 
 [node name="SpinnyWheel2" parent="." instance=ExtResource("4_a83gr")]
 position = Vector2(-46, -40)
 collision_mask = 1
 
-[node name="Croc" parent="." instance=ExtResource("4_6l2ww")]
-position = Vector2(-5, 7)
-collision_mask = 1
-
-[node name="Magician" parent="." instance=ExtResource("5_tmy77")]
-position = Vector2(113, -20)
-collision_mask = 1
+[node name="LoreDropper" parent="." instance=ExtResource("4_kpaye")]
+position = Vector2(-72, 8)
 
 [node name="Platform" parent="." instance=ExtResource("6_4fsgc")]
-position = Vector2(-57, -106)
+position = Vector2(-56, -104)
+isBreakable = true
 
 [node name="Player" parent="." instance=ExtResource("2_y4d7x")]
-position = Vector2(8, -27)
+position = Vector2(24, 208)
+floor_snap_length = 32.0
+knockBackVelocity = -350.0
 
 [node name="RemoteTransform2D" parent="Player" index="2"]
 remote_path = NodePath("../../Camera2D")
