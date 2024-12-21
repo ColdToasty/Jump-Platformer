@@ -21,6 +21,7 @@ public partial class Platform : CharacterBody2D
     private CollisionShape2D collisionShape;
     private Area2D playerDetectionArea;
 
+
     public override void _Ready()
     {
         base._Ready();

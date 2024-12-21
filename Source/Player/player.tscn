@@ -1,7 +1,15 @@
-[gd_scene load_steps=30 format=3 uid="uid://d2doj656dvye3"]
+[gd_scene load_steps=27 format=3 uid="uid://d2doj656dvye3"]
 
 [ext_resource type="Script" path="res://Source/Player/Player.cs" id="1_1m64y"]
 [ext_resource type="Texture2D" uid="uid://b7mkae6eybu73" path="res://Content/Player/Player.png" id="2_orpg1"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l7mxq"]
+atlas = ExtResource("2_orpg1")
+region = Rect2(16, 80, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i82a7"]
+atlas = ExtResource("2_orpg1")
+region = Rect2(0, 80, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_aawt5"]
 atlas = ExtResource("2_orpg1")
@@ -79,28 +87,24 @@ region = Rect2(32, 64, 16, 16)
 atlas = ExtResource("2_orpg1")
 region = Rect2(48, 64, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_1txn8"]
-atlas = ExtResource("2_orpg1")
-region = Rect2(48, 64, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_4cowo"]
-atlas = ExtResource("2_orpg1")
-region = Rect2(32, 64, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hosia"]
-atlas = ExtResource("2_orpg1")
-region = Rect2(16, 64, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jafl8"]
-atlas = ExtResource("2_orpg1")
-region = Rect2(0, 64, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jvp8a"]
-atlas = ExtResource("2_orpg1")
-region = Rect2(0, 0, 16, 16)
-
 [sub_resource type="SpriteFrames" id="SpriteFrames_2krhu"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l7mxq")
+}],
+"loop": true,
+"name": &"FallFlatLeft",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i82a7")
+}],
+"loop": true,
+"name": &"FallFlatRight",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_aawt5")
@@ -202,30 +206,11 @@ animations = [{
 "loop": false,
 "name": &"Portal",
 "speed": 10.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_1txn8")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4cowo")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_hosia")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jafl8")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jvp8a")
-}],
-"loop": false,
-"name": &"Reappear",
-"speed": 10.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_a34ns"]
-size = Vector2(10, 14)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_26f1s"]
+radius = 5.0
+height = 14.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ndipo"]
 size = Vector2(14, 16)
@@ -237,6 +222,9 @@ slide_on_ceiling = false
 floor_stop_on_slope = false
 floor_max_angle = 1.22348
 script = ExtResource("1_1m64y")
+knockBackVelocity = -320.0
+knockBackSpeed = 150.0
+knockDownVelocity = 300.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -1)
@@ -244,7 +232,7 @@ sprite_frames = SubResource("SpriteFrames_2krhu")
 animation = &"Idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_a34ns")
+shape = SubResource("CapsuleShape2D_26f1s")
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="."]
 
@@ -255,5 +243,9 @@ collision_mask = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionArea"]
 shape = SubResource("RectangleShape2D_ndipo")
 
+[node name="AirTimer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="body_entered" from="CollisionArea" to="." method="_on_collision_area_body_entered"]
+[connection signal="timeout" from="AirTimer" to="." method="_on_air_timer_timeout"]

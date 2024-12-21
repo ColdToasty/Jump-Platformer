@@ -2,9 +2,11 @@ using Godot;
 using Platformer.Source.Util;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using static Godot.TextServer;
+using static Player;
 
 public partial class Player : CharacterBody2D
 {
@@ -12,39 +14,80 @@ public partial class Player : CharacterBody2D
     public delegate void PlayerJumpEventHandler();
 
     public enum Direction { Default, Left, Right, Portal }
-    public enum CharacterState { Grounded, Falling, Jumping }
+    public enum CharacterState { Grounded, Falling, Jumping, FallFlat }
 
     private Random random;
 
-    public const float MoveSpeed = 100.0f;
-    public const float JumpSpeed = 100.0f;
-    public const float JumpVelocity = -310.0f;
+    [Export]
+    public float MoveSpeed = 90.0f;
 
     [Export]
-    private float knockBackVelocity = -400.0f;
+    public float JumpSpeed = 100.0f;
+
     [Export]
-    private float knockBackSpeed = 150.0f;
+    public float JumpVelocity = -310.0f;
+
+
+
+    //Max Height of Y when hit by a mob or hitting a wall while in jumping motion
+    [Export]
+    private float knockBackVelocity = -350.0f;
+
+    //Max length of X when hit by a mob or hitting a wall while in jumping motion
+    [Export]
+    private float knockBackSpeed = 100.0f;
+
+
+
+    //Max Height of Y when hitting a wall while in jumping motion
+    [Export]
+    private float wallKnockBackVelocity = -300.0f;
+
+    //Max length of X when hitting a wall while in jumping motion
+    [Export]
+    private float wallKnockBackSpeed = 100.0f;
+
+
+    [Export]
+    private float knockDownVelocity = 175.0f;
+
+    [Export]
+    private float knockDownSpeed = 80.0f;
+
+    private int knockDownCount = 0;
+    private int knockBackCount = 0;
+
+    [Export]
+    private int fallThreshHold = 2;
+
+    [Export]
+    private int currentFallThreshHold;
+
+
+    [Export]
+    private double timeBeforeFallFlat = 0.5f;
+
 
     private AnimatedSprite2D animatedSprite;
-
     private Area2D collisionDetectionArea;
     private CollisionShape2D collisionShape;
+    private Timer airTimer;
 
+   
 
 
     public Direction FaceDirection { get; private set; }
     public CharacterState CurrentCharacterState { get; private set; }
 
 
-    private bool isHitByCroc;
+    private bool isHit;
     private bool knockback;
+    private bool knockDown;
     private bool wallKnock;
-    private bool canMove;
+    private bool fallFlat;
 
+    //X value to tell us which way we should knockback
     private Vector2 hitDirection;
-
-
-
 
 
     public override void _Ready()
@@ -53,12 +96,14 @@ public partial class Player : CharacterBody2D
         animatedSprite = this.GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         collisionDetectionArea = this.GetNode<Area2D>("CollisionArea");
         collisionShape = this.GetNode<CollisionShape2D>("CollisionShape2D");
+        airTimer = this.GetNode<Timer>("AirTimer");
         FaceDirection = Direction.Default;
         CurrentCharacterState = CharacterState.Grounded;
-        isHitByCroc = false;
+        isHit = false;
         knockback = false;
+        knockDown = false;
         wallKnock = false;
-        canMove = true;
+        fallFlat = false;
         hitDirection = Vector2.Zero;
         random = new Random();
     }
@@ -82,41 +127,99 @@ public partial class Player : CharacterBody2D
                 {
                     CurrentCharacterState = CharacterState.Jumping;
                 }
-
+                if (airTimer.IsStopped() && !fallFlat)
+                {
+                    airTimer.Start(timeBeforeFallFlat);
+                }
             }
             else
             {
+                airTimer.Stop();
                 if (wallKnock)
                 {
                     wallKnock = false;
                 }
-                CurrentCharacterState = CharacterState.Grounded;
-                canMove = true;
+
+                isHit = false;
+                knockDown = false;
+                if (currentFallThreshHold >= fallThreshHold || fallFlat == true)
+                {
+                    CurrentCharacterState = CharacterState.FallFlat;
+                    fallFlat = true;
+                    if (this.FaceDirection == Direction.Left)
+                    {
+                        animatedSprite.Play("FallFlatLeft");
+                    }
+                    else
+                    {
+                        animatedSprite.Play("FallFlatRight");
+                    }
+                }
+                else
+                {
+                    CurrentCharacterState = CharacterState.Grounded;
+                }
             }
 
 
             if (knockback)
             {
-                velocity.Y = knockBackVelocity;
-                velocity.X = knockBackSpeed * hitDirection.X;
+                if (wallKnock)
+                {
+                    velocity.Y = wallKnockBackVelocity;
+                    velocity.X = wallKnockBackSpeed * hitDirection.X;
+                }
+                else
+                {
+                    velocity.Y = knockBackVelocity;
+                    velocity.X = knockBackSpeed * hitDirection.X;
+                }
+
                 knockback = false;
-                canMove = false;
-                if (hitDirection.X < 0)
+
+                if (hitDirection.X == Vector2.Left.X)
                 {
                     this.FaceDirection = Direction.Left;
                     animatedSprite.Play("JumpLeft");
                 }
-                else if (hitDirection.X > 0)
+                else if (hitDirection.X == Vector2.Right.X)
                 {
                     this.FaceDirection = Direction.Right;
                     animatedSprite.Play("JumpRight");
                 }
             }
+            else if (knockDown)
+            {
+
+                velocity.Y = knockDownVelocity;
+                velocity.X = knockDownSpeed * hitDirection.X;
+
+                if (hitDirection.X == Vector2.Left.X)
+                {
+                    this.FaceDirection = Direction.Left;
+
+                }
+                else if (hitDirection.X == Vector2.Right.X)
+                {
+                    this.FaceDirection = Direction.Right;
+                }
+            }
             else
             {
-                if (!wallKnock & canMove)
+                if(CurrentCharacterState == CharacterState.FallFlat)
                 {
-
+                    velocity = Vector2.Zero;
+                    Vector2 direction = Input.GetVector("MoveLeft", "MoveRight", "MoveUp", "MoveDown");
+                    if (direction != Vector2.Zero)
+                    {
+                        CurrentCharacterState = CharacterState.Grounded;
+                        currentFallThreshHold = 0;
+                        fallFlat = false;
+                    }
+                }
+                else if (!wallKnock && CurrentCharacterState == CharacterState.Grounded)
+                {
+                    currentFallThreshHold = 0;
                     // Get the input direction and handle the movement/deceleration.
                     // As good practice, you should replace UI actions with custom gameplay actions.
                     Vector2 direction = Input.GetVector("MoveLeft", "MoveRight", "MoveUp", "MoveDown");
@@ -131,8 +234,7 @@ public partial class Player : CharacterBody2D
 
                     }
 
-
-                    if (direction != Vector2.Zero && CurrentCharacterState == CharacterState.Grounded)
+                    if (direction != Vector2.Zero )
                     {
  
                         velocity.X = direction.X * MoveSpeed;
@@ -147,7 +249,7 @@ public partial class Player : CharacterBody2D
                             animatedSprite.Play("MoveRight");
                         }
                     }
-                    else if (direction == Vector2.Zero && CurrentCharacterState == CharacterState.Grounded && !Input.IsActionPressed("Jump"))
+                    else if (direction == Vector2.Zero && !Input.IsActionPressed("Jump"))
                     {
                         velocity.X = Mathf.MoveToward(Velocity.X, 0, MoveSpeed);
                         if (CurrentCharacterState == CharacterState.Grounded)
@@ -173,28 +275,8 @@ public partial class Player : CharacterBody2D
                     }
 
 
-                    if (CurrentCharacterState == CharacterState.Falling || CurrentCharacterState == CharacterState.Jumping)
-                    {
-                        if (FaceDirection == Direction.Left)
-                        {
-                            animatedSprite.Play("JumpLeft");
-                        }
-                        else if (FaceDirection == Direction.Right)
-                        {
-                            animatedSprite.Play("JumpRight");
-                        }
-
-                        if (direction != Vector2.Zero)
-                        {
-                            velocity.X = direction.X * MoveSpeed;
-                        }
-                    }
-
-
-
-
                     // Handle Jump.
-                    if (Input.IsActionPressed("Jump") && CurrentCharacterState == CharacterState.Grounded)
+                    if (Input.IsActionPressed("Jump") )
                     {
                         FaceDirection = Direction.Default;
 
@@ -203,17 +285,29 @@ public partial class Player : CharacterBody2D
                     }
 
 
-                    if (Input.IsActionJustReleased("Jump") && CurrentCharacterState == CharacterState.Grounded)
+                    if (Input.IsActionJustReleased("Jump"))
                     {
                         EmitSignal(SignalName.PlayerJump);
                         velocity.Y = JumpVelocity;
                     }
                 
                 }
+                else
+                {
+                    if (FaceDirection == Direction.Left)
+                    {
+                        animatedSprite.Play("JumpLeft");
+                    }
+                    else if (FaceDirection == Direction.Right)
+                    {
+                        animatedSprite.Play("JumpRight");
+                    }
+                }
             }
 
 
-            GD.Print(canMove);
+            
+
             Velocity = velocity;
             bool isColliding = MoveAndSlide();
 
@@ -229,7 +323,7 @@ public partial class Player : CharacterBody2D
                 }
                 else if(collisionObject is Mob)
                 {
-     
+                    
                 }
    
 
@@ -241,12 +335,64 @@ public partial class Player : CharacterBody2D
 
     private void SetWallKnockBack(KinematicCollision2D collision)
     {
-        if(CurrentCharacterState == CharacterState.Jumping)
+
+        Vector2 collisionNormal = collision.GetNormal().Round();
+        // (1 , 0) player on right
+        // (-1 , 0) player on left
+        // (0 , 0) player in air
+        // (0 , 1) // player under 
+        // (0 , -1) // player on top
+
+        // (1 , 1) // player on right under
+        // (1 , -1) // player on right top
+
+        // (-1 , -1) // player on left under
+        // (-1 , 1) // player on left top
+
+        if (collisionNormal == new Vector2(1, 1))
         {
-            float goLeft = collision.GetNormal().X;
+            GD.Print("right under");
+        }
+
+        if (collisionNormal == new Vector2(1, -1))
+        {
+            GD.Print("right top");
+        }
+
+        if (collisionNormal == new Vector2(-1, 1))
+        {
+            GD.Print("left under");
+        }
+
+        if (collisionNormal == new Vector2(-1, -1))
+        {
+            GD.Print("left top");
+        }
+
+        if (CurrentCharacterState == CharacterState.Jumping || CurrentCharacterState == CharacterState.Falling)
+        {
+            float goLeft = collisionNormal.X;
             hitDirection = goLeft < 0 ? Vector2.Left : Vector2.Right;
-            knockback = true;
+            if (CurrentCharacterState == CharacterState.Jumping)
+            {
+                knockback = true;
+                knockDown = false;
+            }
+            else if(CurrentCharacterState == CharacterState.Falling)
+            {
+                knockDown = true;
+                knockback = false;
+
+                if(collisionNormal.Y != -1)
+                {
+                    currentFallThreshHold++;
+                    currentFallThreshHold = Math.Clamp(currentFallThreshHold, 0, fallThreshHold);
+                }
+
+
+            }
             wallKnock = true;
+            isHit = true;
             if (collision.GetNormal().Y > 0)
             {
                 if(goLeft == 0)
@@ -264,26 +410,6 @@ public partial class Player : CharacterBody2D
                     hitDirection = direction;
                 }
             }
-        }
-    }
-
-    private void SetMobKnockBack(KinematicCollision2D collision)
-    {
-        float goLeft = collision.GetNormal().X;
-        hitDirection = goLeft < 0 ? Vector2.Left : Vector2.Right;
-
-        Mob mob = (Mob)collision.GetCollider();
-
-        if (mob.MobType == Mob.TypeOfMob.Magician)
-        {
-            animatedSprite.Play("Portal");
-            FaceDirection = Direction.Portal;
-            collisionDetectionArea.SetDeferred("monitoring", false);
-            collisionShape.SetDeferred("disabled", true);
-        }
-        else
-        {
-            knockback = true;
         }
     }
 
@@ -306,6 +432,7 @@ public partial class Player : CharacterBody2D
         else
         {
             knockback = true;
+            isHit = true;
         }
 
     }
@@ -321,8 +448,6 @@ public partial class Player : CharacterBody2D
             Vector2 playerTilePosition = PositionCalculator.GetPosition(this.GlobalPosition).Item1;
 
             HashSet<Vector2I> usedCells = this.GetParent<LevelBase>().GetSurroundingCellsInTileSizeCoOrds().ToHashSet<Vector2I>();
-
-
 
             Vector2I teleportedPosition = Vector2I.Zero;
             int y = 4;
@@ -356,6 +481,11 @@ public partial class Player : CharacterBody2D
 
             //if Position has a tile then Y+5 and so on
         }
+    }
+
+    public void _on_air_timer_timeout()
+    {
+        fallFlat = true;
     }
 
 

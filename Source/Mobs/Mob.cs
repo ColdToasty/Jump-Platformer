@@ -8,7 +8,7 @@ using System.Linq;
 public partial class Mob : CharacterBody2D
 {
     [Export]
-    public float Speed = 50.0f;
+    public float Speed = 100.0f;
 
     [Export]
 	protected bool moveLeft;
@@ -26,8 +26,6 @@ public partial class Mob : CharacterBody2D
     protected Area2D attackRange;
     public enum TypeOfMob {Croc, Magician, Spinny}
 
-    [Export]
-    public float KnockbackPower = 100; 
 
     [Export]
     public TypeOfMob MobType { get; protected set; }
