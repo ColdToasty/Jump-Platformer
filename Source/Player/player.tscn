@@ -208,9 +208,8 @@ animations = [{
 "speed": 10.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_26f1s"]
-radius = 5.0
-height = 14.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bxxjp"]
+size = Vector2(7, 7)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ndipo"]
 size = Vector2(14, 16)
@@ -222,9 +221,18 @@ slide_on_ceiling = false
 floor_stop_on_slope = false
 floor_max_angle = 1.22348
 script = ExtResource("1_1m64y")
-knockBackVelocity = -320.0
-knockBackSpeed = 150.0
-knockDownVelocity = 300.0
+MoveSpeed = 90.0
+JumpSpeed = 100.0
+MaximumJumpVelocity = -400.0
+MinimumJumpVelocity = -30.0
+jumpGravity = 980.0
+fallGravity = 1200.0
+knockBackVelocity = -400.0
+knockBackSpeed = 100.0
+wallKnockBackVelocity = -250.0
+wallKnockBackSpeed = 100.0
+wallKnockDownVelocity = 300.0
+wallKnockDownSpeed = 100.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -1)
@@ -232,7 +240,8 @@ sprite_frames = SubResource("SpriteFrames_2krhu")
 animation = &"Idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CapsuleShape2D_26f1s")
+position = Vector2(-0.5, 3.5)
+shape = SubResource("RectangleShape2D_bxxjp")
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="."]
 
@@ -248,4 +257,3 @@ one_shot = true
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="body_entered" from="CollisionArea" to="." method="_on_collision_area_body_entered"]
-[connection signal="timeout" from="AirTimer" to="." method="_on_air_timer_timeout"]

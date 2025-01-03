@@ -19,61 +19,63 @@ public partial class Player : CharacterBody2D
     private Random random;
 
     [Export]
-    public float MoveSpeed = 90.0f;
+    public float MoveSpeed;
 
     [Export]
-    public float JumpSpeed = 100.0f;
+    public float JumpSpeed;
+
+    //Maximum Y height of a jump
+    [Export]
+    public float MaximumJumpVelocity;
+
+    //Minimum Y height of a jump
+    [Export]
+    private float MinimumJumpVelocity;
+
 
     [Export]
-    public float JumpVelocity = -310.0f;
+    private float jumpGravity;
+    [Export]
+    private float fallGravity;
 
 
+
+    [Export]
+    private float CurrentJumpVelocity;
 
     //Max Height of Y when hit by a mob or hitting a wall while in jumping motion
+
     [Export]
-    private float knockBackVelocity = -350.0f;
+    private float knockBackVelocity;
 
     //Max length of X when hit by a mob or hitting a wall while in jumping motion
     [Export]
-    private float knockBackSpeed = 100.0f;
-
+    private float knockBackSpeed;
 
 
     //Max Height of Y when hitting a wall while in jumping motion
     [Export]
-    private float wallKnockBackVelocity = -300.0f;
+    private float wallKnockBackVelocity;
 
     //Max length of X when hitting a wall while in jumping motion
     [Export]
-    private float wallKnockBackSpeed = 100.0f;
-
-
-    [Export]
-    private float knockDownVelocity = 175.0f;
+    private float wallKnockBackSpeed;
 
     [Export]
-    private float knockDownSpeed = 80.0f;
+    private float wallKnockDownVelocity;
 
-    private int knockDownCount = 0;
-    private int knockBackCount = 0;
-
+    //Max length of X when hitting a wall while in falling motion
     [Export]
-    private int fallThreshHold = 2;
-
-    [Export]
-    private int currentFallThreshHold;
+    private float wallKnockDownSpeed;
 
 
-    [Export]
-    private double timeBeforeFallFlat = 0.5f;
+
 
 
     private AnimatedSprite2D animatedSprite;
     private Area2D collisionDetectionArea;
     private CollisionShape2D collisionShape;
-    private Timer airTimer;
 
-   
 
 
     public Direction FaceDirection { get; private set; }
@@ -84,7 +86,7 @@ public partial class Player : CharacterBody2D
     private bool knockback;
     private bool knockDown;
     private bool wallKnock;
-    private bool fallFlat;
+
 
     //X value to tell us which way we should knockback
     private Vector2 hitDirection;
@@ -96,16 +98,29 @@ public partial class Player : CharacterBody2D
         animatedSprite = this.GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         collisionDetectionArea = this.GetNode<Area2D>("CollisionArea");
         collisionShape = this.GetNode<CollisionShape2D>("CollisionShape2D");
-        airTimer = this.GetNode<Timer>("AirTimer");
         FaceDirection = Direction.Default;
         CurrentCharacterState = CharacterState.Grounded;
         isHit = false;
         knockback = false;
         knockDown = false;
         wallKnock = false;
-        fallFlat = false;
+
         hitDirection = Vector2.Zero;
         random = new Random();
+
+        CurrentJumpVelocity = MinimumJumpVelocity;
+
+    }
+    public Vector2 GetGravityValue()
+    {
+        if(this.CurrentCharacterState == CharacterState.Falling)
+        {
+            return new Vector2(0, fallGravity);
+        }
+        else
+        {
+            return new Vector2(0, jumpGravity);
+        }
     }
 
     public override void _PhysicsProcess(double delta)
@@ -117,8 +132,7 @@ public partial class Player : CharacterBody2D
             // Add the gravity.
             if (!IsOnFloor())
             {
-                velocity += GetGravity() * (float)delta;
-
+                velocity += GetGravityValue() * (float)delta;
                 if (velocity.Y > 0)
                 {
                     CurrentCharacterState = CharacterState.Falling;
@@ -127,14 +141,11 @@ public partial class Player : CharacterBody2D
                 {
                     CurrentCharacterState = CharacterState.Jumping;
                 }
-                if (airTimer.IsStopped() && !fallFlat)
-                {
-                    airTimer.Start(timeBeforeFallFlat);
-                }
             }
             else
             {
-                airTimer.Stop();
+
+                //set wallKnock to false as soon as we hit the ground
                 if (wallKnock)
                 {
                     wallKnock = false;
@@ -142,23 +153,9 @@ public partial class Player : CharacterBody2D
 
                 isHit = false;
                 knockDown = false;
-                if (currentFallThreshHold >= fallThreshHold || fallFlat == true)
-                {
-                    CurrentCharacterState = CharacterState.FallFlat;
-                    fallFlat = true;
-                    if (this.FaceDirection == Direction.Left)
-                    {
-                        animatedSprite.Play("FallFlatLeft");
-                    }
-                    else
-                    {
-                        animatedSprite.Play("FallFlatRight");
-                    }
-                }
-                else
-                {
-                    CurrentCharacterState = CharacterState.Grounded;
-                }
+
+                CurrentCharacterState = CharacterState.Grounded;
+                
             }
 
 
@@ -191,8 +188,8 @@ public partial class Player : CharacterBody2D
             else if (knockDown)
             {
 
-                velocity.Y = knockDownVelocity;
-                velocity.X = knockDownSpeed * hitDirection.X;
+                velocity.Y = wallKnockDownVelocity;
+                velocity.X = wallKnockDownSpeed * hitDirection.X;
 
                 if (hitDirection.X == Vector2.Left.X)
                 {
@@ -206,20 +203,10 @@ public partial class Player : CharacterBody2D
             }
             else
             {
-                if(CurrentCharacterState == CharacterState.FallFlat)
+
+
+                if (!wallKnock && CurrentCharacterState == CharacterState.Grounded)
                 {
-                    velocity = Vector2.Zero;
-                    Vector2 direction = Input.GetVector("MoveLeft", "MoveRight", "MoveUp", "MoveDown");
-                    if (direction != Vector2.Zero)
-                    {
-                        CurrentCharacterState = CharacterState.Grounded;
-                        currentFallThreshHold = 0;
-                        fallFlat = false;
-                    }
-                }
-                else if (!wallKnock && CurrentCharacterState == CharacterState.Grounded)
-                {
-                    currentFallThreshHold = 0;
                     // Get the input direction and handle the movement/deceleration.
                     // As good practice, you should replace UI actions with custom gameplay actions.
                     Vector2 direction = Input.GetVector("MoveLeft", "MoveRight", "MoveUp", "MoveDown");
@@ -282,13 +269,19 @@ public partial class Player : CharacterBody2D
 
                         animatedSprite.Play("Jump");
                         velocity.X = Mathf.MoveToward(Velocity.X, 0, MoveSpeed);
+
+                        CurrentJumpVelocity -= 10;
+                        CurrentJumpVelocity = Mathf.Clamp(CurrentJumpVelocity, MaximumJumpVelocity, MinimumJumpVelocity);
                     }
 
 
-                    if (Input.IsActionJustReleased("Jump"))
+                    if (Input.IsActionJustReleased("Jump") || CurrentJumpVelocity == MaximumJumpVelocity)
                     {
                         EmitSignal(SignalName.PlayerJump);
-                        velocity.Y = JumpVelocity;
+                        velocity.Y = CurrentJumpVelocity;
+                        CurrentJumpVelocity = MinimumJumpVelocity;
+
+                        velocity.X = direction.X * MoveSpeed;
                     }
                 
                 }
@@ -306,7 +299,7 @@ public partial class Player : CharacterBody2D
             }
 
 
-            
+
 
             Velocity = velocity;
             bool isColliding = MoveAndSlide();
@@ -349,25 +342,6 @@ public partial class Player : CharacterBody2D
         // (-1 , -1) // player on left under
         // (-1 , 1) // player on left top
 
-        if (collisionNormal == new Vector2(1, 1))
-        {
-            GD.Print("right under");
-        }
-
-        if (collisionNormal == new Vector2(1, -1))
-        {
-            GD.Print("right top");
-        }
-
-        if (collisionNormal == new Vector2(-1, 1))
-        {
-            GD.Print("left under");
-        }
-
-        if (collisionNormal == new Vector2(-1, -1))
-        {
-            GD.Print("left top");
-        }
 
         if (CurrentCharacterState == CharacterState.Jumping || CurrentCharacterState == CharacterState.Falling)
         {
@@ -380,14 +354,8 @@ public partial class Player : CharacterBody2D
             }
             else if(CurrentCharacterState == CharacterState.Falling)
             {
-                knockDown = true;
                 knockback = false;
-
-                if(collisionNormal.Y != -1)
-                {
-                    currentFallThreshHold++;
-                    currentFallThreshHold = Math.Clamp(currentFallThreshHold, 0, fallThreshHold);
-                }
+                knockDown = true;
 
 
             }
@@ -483,10 +451,7 @@ public partial class Player : CharacterBody2D
         }
     }
 
-    public void _on_air_timer_timeout()
-    {
-        fallFlat = true;
-    }
+
 
 
 

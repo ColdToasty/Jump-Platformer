@@ -7,6 +7,10 @@
       "RelativeMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|solutionrelative:source\\player\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|d:\\github\\jump-platformer\\source\\levels\\levelbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|solutionrelative:source\\levels\\levelbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|d:\\github\\jump-platformer\\source\\mobs\\mob.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|solutionrelative:source\\mobs\\mob.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -18,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 678,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 9,
           "Children": [
             {
               "$type": "Bookmark",
@@ -51,6 +55,18 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "LevelBase.cs",
+              "DocumentMoniker": "D:\\Github\\Jump-Platformer\\Source\\Levels\\LevelBase.cs",
+              "RelativeDocumentMoniker": "Source\\Levels\\LevelBase.cs",
+              "ToolTip": "D:\\Github\\Jump-Platformer\\Source\\Levels\\LevelBase.cs",
+              "RelativeToolTip": "Source\\Levels\\LevelBase.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAxwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-01T00:53:02.709Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "Mob.cs",
               "DocumentMoniker": "D:\\Github\\Jump-Platformer\\Source\\Mobs\\Mob.cs",
               "RelativeDocumentMoniker": "Source\\Mobs\\Mob.cs",
@@ -68,7 +84,7 @@
               "RelativeDocumentMoniker": "Source\\Player\\Player.cs",
               "ToolTip": "D:\\Github\\Jump-Platformer\\Source\\Player\\Player.cs",
               "RelativeToolTip": "Source\\Player\\Player.cs",
-              "ViewState": "AgIAAF4AAAAAAAAAAAAcwHgAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAA0BAAAAAAAAAAAuwK8AAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-17T23:53:04.348Z",
               "EditorCaption": ""
