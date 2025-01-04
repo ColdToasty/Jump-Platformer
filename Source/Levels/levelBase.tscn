@@ -511,6 +511,10 @@ isBreakable = true
 [node name="Player" parent="." instance=ExtResource("2_y4d7x")]
 position = Vector2(-192, -184)
 floor_snap_length = 32.0
+JumpSpeed = 140.0
+MaximumJumpVelocity = -370.0
+fallGravity = 1300.0
+wallKnockDownSpeed = 70.0
 
 [node name="RemoteTransform2D" parent="Player" index="2"]
 remote_path = NodePath("../../Camera2D")

@@ -32,13 +32,19 @@ public partial class Player : CharacterBody2D
     [Export]
     private float MinimumJumpVelocity;
 
-
     [Export]
     private float jumpGravity;
     [Export]
     private float fallGravity;
 
+    [Export]
+    private float knockbackGravity;
 
+    [Export]
+    private float wallKnockbackGravity;
+
+    [Export]
+    private float wallKnockdowGravity;
 
     [Export]
     private float CurrentJumpVelocity;
@@ -70,22 +76,19 @@ public partial class Player : CharacterBody2D
 
 
 
-
-
     private AnimatedSprite2D animatedSprite;
     private Area2D collisionDetectionArea;
     private CollisionShape2D collisionShape;
-
 
 
     public Direction FaceDirection { get; private set; }
     public CharacterState CurrentCharacterState { get; private set; }
 
 
-    private bool isHit;
+
     private bool knockback;
     private bool knockDown;
-    private bool wallKnock;
+    private bool wallKnockback;
 
 
     //X value to tell us which way we should knockback
@@ -100,10 +103,10 @@ public partial class Player : CharacterBody2D
         collisionShape = this.GetNode<CollisionShape2D>("CollisionShape2D");
         FaceDirection = Direction.Default;
         CurrentCharacterState = CharacterState.Grounded;
-        isHit = false;
+
         knockback = false;
         knockDown = false;
-        wallKnock = false;
+        wallKnockback = false;
 
         hitDirection = Vector2.Zero;
         random = new Random();
@@ -113,6 +116,24 @@ public partial class Player : CharacterBody2D
     }
     public Vector2 GetGravityValue()
     {
+        
+        //if we hit a wall
+        if (wallKnockback && !knockDown)
+        {
+            return new Vector2(0, jumpGravity);
+        }
+        //Gravity if we are hit a wall while in the falling state
+        else if (knockDown)
+        {
+            return new Vector2(0, wallKnockdowGravity);
+        }
+        //Gravity if we are hit by a mob
+        else if(knockback)
+        {
+            return new Vector2(0, jumpGravity);
+        }
+
+
         if(this.CurrentCharacterState == CharacterState.Falling)
         {
             return new Vector2(0, fallGravity);
@@ -145,13 +166,13 @@ public partial class Player : CharacterBody2D
             else
             {
 
-                //set wallKnock to false as soon as we hit the ground
-                if (wallKnock)
+                //set wallKnockback to false as soon as we hit the ground
+                if (wallKnockback)
                 {
-                    wallKnock = false;
+                    wallKnockback = false;
                 }
 
-                isHit = false;
+        
                 knockDown = false;
 
                 CurrentCharacterState = CharacterState.Grounded;
@@ -161,7 +182,7 @@ public partial class Player : CharacterBody2D
 
             if (knockback)
             {
-                if (wallKnock)
+                if (wallKnockback)
                 {
                     velocity.Y = wallKnockBackVelocity;
                     velocity.X = wallKnockBackSpeed * hitDirection.X;
@@ -187,9 +208,7 @@ public partial class Player : CharacterBody2D
             }
             else if (knockDown)
             {
-
-                velocity.Y = wallKnockDownVelocity;
-                velocity.X = wallKnockDownSpeed * hitDirection.X;
+               velocity.X = wallKnockDownSpeed * hitDirection.X;
 
                 if (hitDirection.X == Vector2.Left.X)
                 {
@@ -204,8 +223,7 @@ public partial class Player : CharacterBody2D
             else
             {
 
-
-                if (!wallKnock && CurrentCharacterState == CharacterState.Grounded)
+                if (!wallKnockback && CurrentCharacterState == CharacterState.Grounded)
                 {
                     // Get the input direction and handle the movement/deceleration.
                     // As good practice, you should replace UI actions with custom gameplay actions.
@@ -268,7 +286,7 @@ public partial class Player : CharacterBody2D
                         FaceDirection = Direction.Default;
 
                         animatedSprite.Play("Jump");
-                        velocity.X = Mathf.MoveToward(Velocity.X, 0, MoveSpeed);
+                        velocity.X = Mathf.MoveToward(Velocity.X, 0, JumpSpeed);
 
                         CurrentJumpVelocity -= 10;
                         CurrentJumpVelocity = Mathf.Clamp(CurrentJumpVelocity, MaximumJumpVelocity, MinimumJumpVelocity);
@@ -281,7 +299,7 @@ public partial class Player : CharacterBody2D
                         velocity.Y = CurrentJumpVelocity;
                         CurrentJumpVelocity = MinimumJumpVelocity;
 
-                        velocity.X = direction.X * MoveSpeed;
+                        velocity.X = direction.X * JumpSpeed;
                     }
                 
                 }
@@ -359,8 +377,8 @@ public partial class Player : CharacterBody2D
 
 
             }
-            wallKnock = true;
-            isHit = true;
+            wallKnockback = true;
+     
             if (collision.GetNormal().Y > 0)
             {
                 if(goLeft == 0)
@@ -400,7 +418,7 @@ public partial class Player : CharacterBody2D
         else
         {
             knockback = true;
-            isHit = true;
+
         }
 
     }
