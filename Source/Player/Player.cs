@@ -59,6 +59,8 @@ public partial class Player : CharacterBody2D
     private float knockBackSpeed;
 
 
+    ///////////////////// when hitting a wall while in the jumping motion of a jump 
+
     //Max Height of Y when hitting a wall while in jumping motion
     [Export]
     private float wallKnockBackVelocity;
@@ -67,6 +69,8 @@ public partial class Player : CharacterBody2D
     [Export]
     private float wallKnockBackSpeed;
 
+
+    ///////////////////// when hitting a wall while in the falling motion of a jump 
     [Export]
     private float wallKnockDownVelocity;
 
@@ -295,6 +299,7 @@ public partial class Player : CharacterBody2D
 
                     if (Input.IsActionJustReleased("Jump") || CurrentJumpVelocity == MaximumJumpVelocity)
                     {
+
                         EmitSignal(SignalName.PlayerJump);
                         velocity.Y = CurrentJumpVelocity;
                         CurrentJumpVelocity = MinimumJumpVelocity;

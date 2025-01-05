@@ -136,7 +136,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_cvieg")
 }],
-"loop": true,
+"loop": false,
 "name": &"Jump",
 "speed": 5.0
 }, {
@@ -223,8 +223,8 @@ floor_max_angle = 1.22348
 script = ExtResource("1_1m64y")
 MoveSpeed = 100.0
 JumpSpeed = 200.0
-MaximumJumpVelocity = -400.0
-MinimumJumpVelocity = -30.0
+MaximumJumpVelocity = -500.0
+MinimumJumpVelocity = -50.0
 jumpGravity = 980.0
 fallGravity = 1200.0
 wallKnockdowGravity = 1800.0
@@ -238,7 +238,7 @@ wallKnockDownSpeed = 100.0
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -1)
 sprite_frames = SubResource("SpriteFrames_2krhu")
-animation = &"Idle"
+animation = &"Jump"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-0.5, 3.5)
