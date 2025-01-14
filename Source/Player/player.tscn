@@ -1,7 +1,8 @@
-[gd_scene load_steps=27 format=3 uid="uid://d2doj656dvye3"]
+[gd_scene load_steps=30 format=3 uid="uid://d2doj656dvye3"]
 
 [ext_resource type="Script" path="res://Source/Player/Player.cs" id="1_1m64y"]
 [ext_resource type="Texture2D" uid="uid://b7mkae6eybu73" path="res://Content/Player/Player.png" id="2_orpg1"]
+[ext_resource type="AudioStream" uid="uid://c6lj42bxb4unj" path="res://Content/SoundEffects/Jump.wav" id="3_8wn7u"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_l7mxq"]
 atlas = ExtResource("2_orpg1")
@@ -38,6 +39,14 @@ region = Rect2(48, 48, 16, 16)
 [sub_resource type="AtlasTexture" id="AtlasTexture_nd371"]
 atlas = ExtResource("2_orpg1")
 region = Rect2(32, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e5nkc"]
+atlas = ExtResource("2_orpg1")
+region = Rect2(32, 80, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ujrne"]
+atlas = ExtResource("2_orpg1")
+region = Rect2(48, 80, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6g7fr"]
 atlas = ExtResource("2_orpg1")
@@ -138,7 +147,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"Jump",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -154,6 +163,17 @@ animations = [{
 }],
 "loop": false,
 "name": &"JumpRight",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e5nkc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ujrne")
+}],
+"loop": true,
+"name": &"JumpUp",
 "speed": 10.0
 }, {
 "frames": [{
@@ -222,23 +242,26 @@ floor_stop_on_slope = false
 floor_max_angle = 1.22348
 script = ExtResource("1_1m64y")
 MoveSpeed = 100.0
-JumpSpeed = 200.0
-MaximumJumpVelocity = -500.0
+JumpSpeed = 150.0
+MaximumJumpVelocity = -450.0
 MinimumJumpVelocity = -50.0
 jumpGravity = 980.0
-fallGravity = 1200.0
+fallGravity = 1350.0
 wallKnockdowGravity = 1800.0
 knockBackVelocity = -400.0
 knockBackSpeed = 100.0
-wallKnockBackVelocity = -250.0
-wallKnockBackSpeed = 100.0
+wallKnockBackVelocity = -260.0
+wallKnockBackSpeed = 95.0
 wallKnockDownVelocity = 300.0
 wallKnockDownSpeed = 100.0
+increaseJumpPowerAmount = 6
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -1)
 sprite_frames = SubResource("SpriteFrames_2krhu")
 animation = &"Jump"
+frame = 1
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-0.5, 3.5)
@@ -256,5 +279,9 @@ shape = SubResource("RectangleShape2D_ndipo")
 [node name="AirTimer" type="Timer" parent="."]
 one_shot = true
 
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_8wn7u")
+
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="body_entered" from="CollisionArea" to="." method="_on_collision_area_body_entered"]
+[connection signal="finished" from="AudioStreamPlayer2D" to="." method="_on_audio_stream_player_2d_finished"]

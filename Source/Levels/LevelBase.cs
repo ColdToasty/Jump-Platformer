@@ -1,5 +1,4 @@
 using Godot;
-using Godot.Collections;
 using Platformer.Source.Util;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +25,9 @@ public partial class LevelBase : Node2D
 
 
 	private Vector2 diagonalSlideVelocity;
+
+
+
     public override void _Ready()
 	{
 		collisionTileLayer = this.GetNode<TileMapLayer>("TileMapLayer");
@@ -113,6 +115,24 @@ public partial class LevelBase : Node2D
             {
                 collisionTileLayer.GetCellTileData(TileUnderPlayerPosition).SetConstantLinearVelocity(0, slideVelocity);
             }
+
+		}
+
+		if (slidingTiles.Contains(TileUnderPlayerPosition) && diagonalTiles.Contains(TileUnderPlayerPosition))
+		{
+            player.CanMove = false;
+			if ((bool)collisionTileLayer.GetCellTileData(TileUnderPlayerPosition).GetCustomData("LeftDiagonal") == true)
+			{
+				player.FaceDirection = Player.Direction.Left;
+			}
+			else
+			{
+				player.FaceDirection = Player.Direction.Right;
+			}
+        }
+		else
+		{
+			player.CanMove = true;
 		}
 
     }

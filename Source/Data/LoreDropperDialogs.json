@@ -1,0 +1,298 @@
+{
+  "LoreDroppers": [
+    {
+      "ID": "Janitor_00",
+      "Name": "Janitor",
+      "Dialog": "Hey you. You've finally arrived. I was wondering when you'll show up to collect your socks. They've been placed at the summit already.",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Janitor_01"
+    },
+    {
+      "ID": "Janitor_01",
+      "Name": "Janitor",
+      "Dialog": "They say he or she who shows up after closing hours to retrieve their socks at the summit is the one who will claim unknown, but awesome power!",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Janitor_02"
+    },
+    {
+      "ID": "Janitor_02",
+      "Name": "Janitor",
+      "Dialog": "Obviously many have tried to make the climb...",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "Janitor_03"
+    },
+    {
+      "ID": "Janitor_03",
+      "Name": "Janitor",
+      "Dialog": "But in the end, they've all failed...",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Janitor_04"
+    },
+    {
+      "ID": "Janitor_04",
+      "Name": "Janitor",
+      "Dialog": "Some give up while making excellent progress. Some give up immediately and some are never seen again...",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Janitor_05"
+    },
+    {
+      "ID": "Janitor_05",
+      "Name": "Janitor",
+      "Dialog": "But I believe, you may be the one. The first to finally reclaim their pair of socks and claim the unknown, but awesome power!",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "Janitor_06"
+    },
+    {
+      "ID": "Janitor_06",
+      "Name": "Janitor",
+      "Dialog": "But, then again I thought that about Peter, Ellie, Nathan, Izzy and Sarah.",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "Janitor_07"
+    },
+    {
+      "ID": "Janitor_07",
+      "Name": "Janitor",
+      "Dialog": "The most recent one who tried the climb was Jerry. He started his climb not too long ago.",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "Janitor_08"
+    },
+    {
+      "ID": "Janitor_08",
+      "Name": "Janitor",
+      "Dialog": "Good luck! Believe in your mind and do whatever it takes to not give into despair!",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": null
+    },
+
+    {
+      "ID": "JerryScroll_00",
+      "Name": "JerryScroll",
+      "Dialog": "The climb has started. I know I can do this. Nothing will stop me!",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "JerryScroll_01"
+    },
+    {
+      "ID": "JerryScroll_01",
+      "Name": "JerryScroll",
+      "Dialog": "The janitor said I was the one. So far so good only a few falls so far.",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "JerryScroll_02"
+    },
+    {
+      "ID": "JerryScroll_02",
+      "Name": "JerryScroll",
+      "Dialog": "When I do fall, I get back up no matter how frustrating it may be.",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "JerryScroll_03"
+    },
+    {
+      "ID": "JerryScroll_03",
+      "Name": "JerryScroll",
+      "Dialog": "I must be him. I know it.",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "JerryScroll_04"
+    },
+
+    {
+      "ID": "JerryScroll_04",
+      "Name": "JerryScroll",
+      "Dialog": "To whom ever may read this. Stop now before you embarrass yourself",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "JerryScroll_05"
+    },
+    {
+      "ID": "JerryScroll_05",
+      "Name": "JerryScroll",
+      "Dialog": "Because if you so reach the top (which you won't'). You'll be forever known as the 'second one who claimed their socks''.",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": null
+    },
+
+
+    {
+      "ID": "JerryNotebook_00",
+      "Name": "JerryNotebook",
+      "Dialog": "How many days has passed since I've started the climb? The janitor told me I was the one!",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "JerryNotebook_01"
+    },
+    {
+      "ID": "JerryNotebook_01",
+      "Name": "JerryNotebook",
+      "Dialog": "He said Peter, Ellie, Nathan, Izzy and Sarah have all failed, but he could see I was the one.",
+
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "JerryNotebook_02"
+    },
+    {
+      "ID": "JerryNotebook_02",
+      "Name": "JerryNotebook",
+      "Dialog": "And I know I am the one. I cannot begin to doubt myself now, I've come so far.",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "JerryNotebook_03"
+    },
+    {
+      "ID": "JerryNotebook_03",
+      "Name": "JerryNotebook",
+      "Dialog": "The floors are buttered. Who butters their floor, a genius or a madman?",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "JerryNotebook_04"
+    },
+    {
+      "ID": "JerryNotebook_04",
+      "Name": "JerryNotebook",
+      "Dialog": "I can't find my footing because I keep sliding.",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "JerryNotebook_05"
+    },
+
+    {
+      "ID": "JerryNotebook_05",
+      "Name": "JerryNotebook",
+      "Dialog": "I don't remember the last time I had a proper meal.",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "JerryNotebook_06"
+    },
+    {
+      "ID": "JerryNotebook_06",
+      "Name": "JerryNotebook",
+      "Dialog": "All I've had is Butter.",
+      "DialogPlaySpeed": "Fast",
+      "NextDialogID": "JerryNotebook_07"
+    },
+    {
+      "ID": "JerryNotebook_07",
+      "Name": "JerryNotebook",
+      "Dialog": "Butter for breakfast...",
+      "DialogPlaySpeed": "Fast",
+      "NextDialogID": "JerryNotebook_08"
+    },
+    {
+      "ID": "JerryNotebook_08",
+      "Name": "JerryNotebook",
+      "Dialog": "Butter for lunch...",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "JerryNotebook_09"
+    },
+    {
+      "ID": "JerryNotebook_09",
+      "Name": "JerryNotebook",
+      "Dialog": "Butter for dinner...",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "JerryNotebook_10"
+    },
+    {
+      "ID": "JerryNotebook_10",
+      "Name": "JerryNotebook",
+      "Dialog": "Day by day the butter takes it's toll, but I have to keep trying.",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "JerryNotebook_11"
+    },
+    {
+      "ID": "JerryNotebook_11",
+      "Name": "JerryNotebook",
+      "Dialog": "But I'm so sick of butter...",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "JerryNotebook_12"
+    },
+    {
+      "ID": "JerryNotebook_13",
+      "Name": "JerryNotebook",
+      "Dialog": "Speaking of which, It's time for dinner. Guess what it is!",
+      "DialogPlaySpeed": "Fast",
+      "NextDialogID": "JerryNotebook_14"
+    },
+    {
+      "ID": "JerryNotebook_15",
+      "Name": "JerryNotebook",
+      "Dialog": "A butter sandwich... Two slices of butter and a thick slice of butter! HAHAHAHAHA.",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": null
+    },
+    {
+      "ID": "Jerry_00",
+      "Name": "Jerry",
+      "Dialog": "I wish I never started. I wish I never started...",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Jerry_01"
+    },
+    {
+      "ID": "Jerry_01",
+      "Name": "Jerry",
+      "Dialog": "I've managed to make progress, but I can't do it anymore.",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "Jerry_02"
+    },
+    {
+      "ID": "Jerry_02",
+      "Name": "Jerry",
+      "Dialog": "I've lost count on how many times I've fallen and gotten back up to this exact spot.",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "Jerry_03"
+    },
+    {
+      "ID": "Jerry_03",
+      "Name": "Jerry",
+      "Dialog": "But, it is all too much on the physical and the mental.",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "Jerry_04"
+    },
+    {
+      "ID": "Jerry_04",
+      "Name": "Jerry",
+      "Dialog": "In the end I never thought it would end like this.",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "Jerry_05"
+    },
+    {
+      "ID": "Jerry_05",
+      "Name": "Jerry",
+      "Dialog": "An onset of delirium and then an eternal slumber caused by my refusal to consume anymore butter.",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "Jerry_06"
+    },
+    {
+      "ID": "Jerry_06",
+      "Name": "Jerry",
+      "Dialog": "I cannot physically nor mentally consume anymore butter. I cannot...",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "Jerry_07"
+    },
+    {
+      "ID": "Jerry_07",
+      "Name": "Jerry",
+      "Dialog": "I thought my mind was my greatest ally",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "Jerry_08"
+    },
+    {
+      "ID": "Jerry_08",
+      "Name": "Jerry",
+      "Dialog": "But, being stranded here... Alone. All by myself.",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "Jerry_09"
+    },
+    {
+      "ID": "Jerry_09",
+      "Name": "Jerry",
+      "Dialog": "With nothing, but my own thoughts and butter. I've come to realise something.",
+      "DialogPlaySpeed": "Default",
+      "NextDialogID": "Jerry_10"
+    },
+    {
+      "ID": "Jerry_10",
+      "Name": "Jerry",
+      "Dialog": "The mind may be your greatest ally, but it can also be your greatest enemy...",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Jerry_11"
+    },
+    {
+      "ID": "Jerry_11",
+      "Name": "Jerry",
+      "Dialog": "And butter. Butter is...",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": null
+
+    }
+  ]
+}

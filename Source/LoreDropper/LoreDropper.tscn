@@ -1,8 +1,25 @@
-[gd_scene load_steps=7 format=3 uid="uid://rt4f8quufofn"]
+[gd_scene load_steps=12 format=3 uid="uid://rt4f8quufofn"]
 
 [ext_resource type="Script" path="res://Source/LoreDropper/LoreDropper.cs" id="1_gkjwv"]
 [ext_resource type="Texture2D" uid="uid://cucravwqhx6wm" path="res://Content/LoreDropper/LoreDropper.png" id="2_hll8c"]
+[ext_resource type="Texture2D" uid="uid://bhjb5eeeeybt7" path="res://Content/LoreDropper/Janitor.png" id="2_tg2h5"]
 [ext_resource type="FontFile" uid="uid://cgfvrtvuhtotb" path="res://Content/Fonts/Roboto/Roboto-Regular.ttf" id="3_d0072"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_86t14"]
+atlas = ExtResource("2_tg2h5")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_usnl1"]
+atlas = ExtResource("2_tg2h5")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v2m1c"]
+atlas = ExtResource("2_tg2h5")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6a1aw"]
+atlas = ExtResource("2_tg2h5")
+region = Rect2(48, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qpytx"]
 atlas = ExtResource("2_hll8c")
@@ -12,10 +29,27 @@ region = Rect2(0, 0, 16, 16)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_86t14")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_usnl1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v2m1c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6a1aw")
+}],
+"loop": true,
+"name": &"Janitor",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_qpytx")
 }],
 "loop": true,
-"name": &"default",
+"name": &"Jerry",
 "speed": 5.0
 }]
 
@@ -26,10 +60,11 @@ size = Vector2(32, 16)
 collision_layer = 64
 collision_mask = 2
 script = ExtResource("1_gkjwv")
-labelText = "How many days has it been? All I can remember eating is butter. Butter for breakfast, lunch and dinner. I do not remember the taste of anything besides butter. I cannot get up because I keep sliding. This is the 47th time I've reached this exact spot. Why is the floor buttered? I only know that I can cannot quit now and be forever disgraced. I will reach the summit to claim what is rightfully mine! One day..."
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_jtas0")
+animation = &"Jerry"
+frame_progress = 0.789384
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 

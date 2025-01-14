@@ -2,11 +2,8 @@ using Godot;
 using Platformer.Source.Util;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
+using System.ComponentModel.Design;
 using System.Linq;
-using static Godot.TextServer;
-using static Player;
 
 public partial class Player : CharacterBody2D
 {
@@ -78,26 +75,35 @@ public partial class Player : CharacterBody2D
     [Export]
     private float wallKnockDownSpeed;
 
+    [Export]
+    private int increaseJumpPowerAmount;
 
 
     private AnimatedSprite2D animatedSprite;
     private Area2D collisionDetectionArea;
     private CollisionShape2D collisionShape;
+    private AudioStreamPlayer2D audioStreamPlayer;
 
-
-    public Direction FaceDirection { get; private set; }
-    public CharacterState CurrentCharacterState { get; private set; }
+    public Direction FaceDirection { get; set; }
+    public CharacterState CurrentCharacterState { get; set; }
 
 
 
     private bool knockback;
     private bool knockDown;
     private bool wallKnockback;
-
-
+    private bool ceilingHit;
+    private bool canMove; 
+    public bool CanMove
+    {
+        get { return canMove; }
+        set { canMove = value; }
+    }
     //X value to tell us which way we should knockback
     private Vector2 hitDirection;
 
+
+    private Dictionary<string, AudioStreamWav> playerSoundEffects;
 
     public override void _Ready()
     {
@@ -105,13 +111,24 @@ public partial class Player : CharacterBody2D
         animatedSprite = this.GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         collisionDetectionArea = this.GetNode<Area2D>("CollisionArea");
         collisionShape = this.GetNode<CollisionShape2D>("CollisionShape2D");
+        audioStreamPlayer = this.GetNode<AudioStreamPlayer2D>("AudioStreamPlayer2D");
+
+
+
+        playerSoundEffects = new Dictionary<string, AudioStreamWav>();
+
+        playerSoundEffects.Add("Jump", GD.Load<AudioStreamWav>("res://Content/SoundEffects/Jump.wav"));
+        playerSoundEffects.Add("WallHit", GD.Load<AudioStreamWav>("res://Content/SoundEffects/WallHit.wav"));
+        playerSoundEffects.Add("FallFlat", GD.Load<AudioStreamWav>("res://Content/SoundEffects/FallFlat.wav"));
+
         FaceDirection = Direction.Default;
         CurrentCharacterState = CharacterState.Grounded;
 
         knockback = false;
         knockDown = false;
         wallKnockback = false;
-
+        canMove = true;
+        ceilingHit = false;
         hitDirection = Vector2.Zero;
         random = new Random();
 
@@ -150,203 +167,226 @@ public partial class Player : CharacterBody2D
 
     public override void _PhysicsProcess(double delta)
 	{
-		Vector2 velocity = Velocity;
+		    Vector2 velocity = Velocity;
 
-        if(FaceDirection != Direction.Portal)
-        {
-            // Add the gravity.
-            if (!IsOnFloor())
+            if (FaceDirection != Direction.Portal)
             {
-                velocity += GetGravityValue() * (float)delta;
-                if (velocity.Y > 0)
+
+                // Add the gravity.
+                if (!IsOnFloor())
                 {
-                    CurrentCharacterState = CharacterState.Falling;
+                    velocity += GetGravityValue() * (float)delta;
+                    if (velocity.Y > 0)
+                    {
+                        CurrentCharacterState = CharacterState.Falling;
+                    }
+                    else
+                    {
+                        CurrentCharacterState = CharacterState.Jumping;
+                    }
+
+                    if (ceilingHit)
+                    {
+
+                    }
                 }
                 else
                 {
-                    CurrentCharacterState = CharacterState.Jumping;
-                }
-            }
-            else
-            {
+                    //set wallKnockback to false as soon as we hit the ground
+                    if (wallKnockback)
+                    {
+                        wallKnockback = false;
+                    }
 
-                //set wallKnockback to false as soon as we hit the ground
-                if (wallKnockback)
-                {
-                    wallKnockback = false;
-                }
+                    knockDown = false;
 
-        
-                knockDown = false;
-
-                CurrentCharacterState = CharacterState.Grounded;
-                
-            }
-
-
-            if (knockback)
-            {
-                if (wallKnockback)
-                {
-                    velocity.Y = wallKnockBackVelocity;
-                    velocity.X = wallKnockBackSpeed * hitDirection.X;
-                }
-                else
-                {
-                    velocity.Y = knockBackVelocity;
-                    velocity.X = knockBackSpeed * hitDirection.X;
-                }
-
-                knockback = false;
-
-                if (hitDirection.X == Vector2.Left.X)
-                {
-                    this.FaceDirection = Direction.Left;
-                    animatedSprite.Play("JumpLeft");
-                }
-                else if (hitDirection.X == Vector2.Right.X)
-                {
-                    this.FaceDirection = Direction.Right;
-                    animatedSprite.Play("JumpRight");
-                }
-            }
-            else if (knockDown)
-            {
-               velocity.X = wallKnockDownSpeed * hitDirection.X;
-
-                if (hitDirection.X == Vector2.Left.X)
-                {
-                    this.FaceDirection = Direction.Left;
+                    CurrentCharacterState = CharacterState.Grounded;
 
                 }
-                else if (hitDirection.X == Vector2.Right.X)
-                {
-                    this.FaceDirection = Direction.Right;
-                }
-            }
-            else
-            {
 
-                if (!wallKnockback && CurrentCharacterState == CharacterState.Grounded)
-                {
-                    // Get the input direction and handle the movement/deceleration.
-                    // As good practice, you should replace UI actions with custom gameplay actions.
-                    Vector2 direction = Input.GetVector("MoveLeft", "MoveRight", "MoveUp", "MoveDown");
 
-                    if (direction.X < 0)
+                if (knockback)
+                {
+                    if (wallKnockback)
+                    {
+                        velocity.Y = wallKnockBackVelocity;
+                        velocity.X = wallKnockBackSpeed * hitDirection.X;
+                    }
+                    else
+                    {
+                        velocity.Y = knockBackVelocity;
+                        velocity.X = knockBackSpeed * hitDirection.X;
+                    }
+
+                    knockback = false;
+
+                    if (hitDirection.X == Vector2.Left.X)
                     {
                         this.FaceDirection = Direction.Left;
-                    }
-                    else if (direction.X > 0)
-                    {
-                        this.FaceDirection = Direction.Right;
-
-                    }
-
-                    if (direction != Vector2.Zero )
-                    {
- 
-                        velocity.X = direction.X * MoveSpeed;
-                        
-
-                        if (direction.X < 0)
-                        {
-                            animatedSprite.Play("MoveLeft");
-                        }
-                        else if (direction.X > 0)
-                        {
-                            animatedSprite.Play("MoveRight");
-                        }
-                    }
-                    else if (direction == Vector2.Zero && !Input.IsActionPressed("Jump"))
-                    {
-                        velocity.X = Mathf.MoveToward(Velocity.X, 0, MoveSpeed);
-                        if (CurrentCharacterState == CharacterState.Grounded)
-                        {
-                            if (FaceDirection == Direction.Left)
-                            {
-                                animatedSprite.Play("IdleLeft");
-     
-                            }
-                            else if (FaceDirection == Direction.Right)
-                            {
-                                animatedSprite.Play("IdleRight");
-  
-                            }
-                            else
-                            {
-                                animatedSprite.Play("Idle");
-                            }
-                        }
-
-
-
-                    }
-
-
-                    // Handle Jump.
-                    if (Input.IsActionPressed("Jump") )
-                    {
-                        FaceDirection = Direction.Default;
-
-                        animatedSprite.Play("Jump");
-                        velocity.X = Mathf.MoveToward(Velocity.X, 0, JumpSpeed);
-
-                        CurrentJumpVelocity -= 10;
-                        CurrentJumpVelocity = Mathf.Clamp(CurrentJumpVelocity, MaximumJumpVelocity, MinimumJumpVelocity);
-                    }
-
-
-                    if (Input.IsActionJustReleased("Jump") || CurrentJumpVelocity == MaximumJumpVelocity)
-                    {
-
-                        EmitSignal(SignalName.PlayerJump);
-                        velocity.Y = CurrentJumpVelocity;
-                        CurrentJumpVelocity = MinimumJumpVelocity;
-
-                        velocity.X = direction.X * JumpSpeed;
-                    }
-                
-                }
-                else
-                {
-                    if (FaceDirection == Direction.Left)
-                    {
                         animatedSprite.Play("JumpLeft");
                     }
-                    else if (FaceDirection == Direction.Right)
+                    else if (hitDirection.X == Vector2.Right.X)
                     {
+                        this.FaceDirection = Direction.Right;
                         animatedSprite.Play("JumpRight");
                     }
                 }
+                else if (knockDown)
+                {
+                    velocity.X = wallKnockDownSpeed * hitDirection.X;
+                    if (hitDirection.X == Vector2.Left.X)
+                    {
+                        this.FaceDirection = Direction.Left;
+
+                    }
+                    else if (hitDirection.X == Vector2.Right.X)
+                    {
+                        this.FaceDirection = Direction.Right;
+                    }
+                }
+                else
+                {
+
+                    if (!wallKnockback && CurrentCharacterState == CharacterState.Grounded)
+                    {
+                        // Get the input direction and handle the movement/deceleration.
+                        // As good practice, you should replace UI actions with custom gameplay actions.
+                        Vector2 direction = Input.GetVector("MoveLeft", "MoveRight", "MoveUp", "MoveDown");
+
+                        if(canMove)
+                        {
+                            if (direction.X < 0)
+                            {
+                                this.FaceDirection = Direction.Left;
+                            }
+                            else if (direction.X > 0)
+                            {
+                                this.FaceDirection = Direction.Right;
+                            }
+                        }
+
+
+                        if (direction != Vector2.Zero)
+                        {
+
+                            velocity.X = direction.X * MoveSpeed;
+
+
+                            if (direction.X < 0)
+                            {
+                                animatedSprite.Play("MoveLeft");
+                            }
+                            else if (direction.X > 0)
+                            {
+                                animatedSprite.Play("MoveRight");
+                            }
+                        }
+                        else if (direction == Vector2.Zero && !Input.IsActionPressed("Jump"))
+                        {
+                            velocity.X = Mathf.MoveToward(Velocity.X, 0, MoveSpeed);
+                            if (CurrentCharacterState == CharacterState.Grounded)
+                            {
+                                if (FaceDirection == Direction.Left)
+                                {
+                                    animatedSprite.Play("IdleLeft");
+
+                                }
+                                else if (FaceDirection == Direction.Right)
+                                {
+                                    animatedSprite.Play("IdleRight");
+
+                                }
+                                else
+                                {
+                                    animatedSprite.Play("Idle");
+                                }
+                            }
+
+
+
+                        }
+
+
+                        // Handle Jump.
+                        if (Input.IsActionPressed("Jump"))
+                        {
+                            if (animatedSprite.IsPlaying())
+                            {
+
+                            }
+                            animatedSprite.Play("Jump");
+                            velocity.X = Mathf.MoveToward(Velocity.X, 0, JumpSpeed);
+                            CurrentJumpVelocity -= increaseJumpPowerAmount;
+                            CurrentJumpVelocity = Mathf.Clamp(CurrentJumpVelocity, MaximumJumpVelocity, MinimumJumpVelocity);
+
+                            if(direction == Vector2.Zero)
+                            {
+                                FaceDirection = Direction.Default;
+                            }
+                        }
+
+    
+                        if (Input.IsActionJustReleased("Jump") || CurrentJumpVelocity == MaximumJumpVelocity)
+                        {
+                            audioStreamPlayer.Stream = playerSoundEffects["Jump"];
+
+                            EmitSignal(SignalName.PlayerJump);
+
+                            velocity.Y = CurrentJumpVelocity;
+                            CurrentJumpVelocity = MinimumJumpVelocity;
+
+                            audioStreamPlayer.Play();
+
+                            velocity.X = direction.X * JumpSpeed;
+
+                            if (direction == Vector2.Zero)
+                            {
+                                FaceDirection = Direction.Default;
+                            }
+                    }
+
+                    }
+                    else
+                    {
+                        if (FaceDirection == Direction.Left)
+                        {
+                            animatedSprite.Play("JumpLeft");
+                        }
+                        else if (FaceDirection == Direction.Right)
+                        {
+                            animatedSprite.Play("JumpRight");
+                        }
+
+                    }
+                }
+
+
+
+
+                Velocity = velocity;
+                bool isColliding = MoveAndSlide();
+
+                if (isColliding)
+                {
+
+                    var collision = this.GetLastSlideCollision();
+
+                    GodotObject collisionObject = collision.GetCollider();
+                    if (collisionObject is TileMapLayer)
+                    {
+                        SetWallKnockBack(collision);
+                    }
+                    else if (collisionObject is Mob)
+                    {
+
+                    }
+
+
+                }
+
             }
 
-
-
-
-            Velocity = velocity;
-            bool isColliding = MoveAndSlide();
-
-            if (isColliding)
-            {
-
-                var collision = this.GetLastSlideCollision();
-
-                GodotObject collisionObject = collision.GetCollider();
-                if (collisionObject is TileMapLayer)
-                {
-                    SetWallKnockBack(collision);
-                }
-                else if(collisionObject is Mob)
-                {
-                    
-                }
-   
-
-            }
-
-
-        }
+        
     }
 
     private void SetWallKnockBack(KinematicCollision2D collision)
@@ -365,42 +405,65 @@ public partial class Player : CharacterBody2D
         // (-1 , -1) // player on left under
         // (-1 , 1) // player on left top
 
-
-        if (CurrentCharacterState == CharacterState.Jumping || CurrentCharacterState == CharacterState.Falling)
+        //Check if we hit the bottom of a tile
+        if(collisionNormal.Y == 1)
         {
-            float goLeft = collisionNormal.X;
-            hitDirection = goLeft < 0 ? Vector2.Left : Vector2.Right;
+            if (FaceDirection == Direction.Left)
+            {
+                hitDirection = Vector2.Left;
+            }
+            else if (FaceDirection == Direction.Right)
+            {
+                hitDirection = Vector2.Right;
+            }
+            else
+            {
+                hitDirection = Vector2.Zero;
+            }
+            ceilingHit = true;
+            knockDown = true;
+            knockback = false;
+            wallKnockback = true;
+        }
+        else if ((CurrentCharacterState == CharacterState.Jumping || CurrentCharacterState == CharacterState.Falling) && collisionNormal.Y == 0)
+        {
+
+            //if we hit the wall from the right
+            if (collisionNormal.X > 0)
+            {
+
+                hitDirection = Vector2.Right;
+            }
+            //if we hit the wall from the left
+            else if (collisionNormal.X < 0)
+            {
+                hitDirection = Vector2.Left;
+            }
+
+
+            ceilingHit = false;
+            
+
             if (CurrentCharacterState == CharacterState.Jumping)
             {
                 knockback = true;
                 knockDown = false;
+
             }
             else if(CurrentCharacterState == CharacterState.Falling)
             {
                 knockback = false;
                 knockDown = true;
-
-
             }
+
             wallKnockback = true;
-     
-            if (collision.GetNormal().Y > 0)
-            {
-                if(goLeft == 0)
-                {
-                    Vector2 direction = Vector2.Zero;
-                    if(FaceDirection == Direction.Left)
-                    {
-                        direction = Vector2.Left;
-                    }
-                    else if(FaceDirection == Direction.Right)
-                    {
-                        direction = Vector2.Right;
-                    }
 
-                    hitDirection = direction;
-                }
-            }
+
+        }
+        if (collisionNormal != new Vector2(0, -1))
+        {
+            audioStreamPlayer.Stream = playerSoundEffects["WallHit"];
+            audioStreamPlayer.Play();
         }
     }
 
@@ -422,13 +485,17 @@ public partial class Player : CharacterBody2D
         }
         else
         {
+            audioStreamPlayer.Stream = playerSoundEffects["WallHit"];
+            audioStreamPlayer.Play();
             knockback = true;
-
         }
 
     }
 
+    public void _on_audio_stream_player_2d_finished()
+    {
 
+    }
     public void _on_animated_sprite_2d_animation_finished()
     {
         if (FaceDirection == Direction.Portal)
