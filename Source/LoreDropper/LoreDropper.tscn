@@ -1,9 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://rt4f8quufofn"]
+[gd_scene load_steps=19 format=3 uid="uid://rt4f8quufofn"]
 
 [ext_resource type="Script" path="res://Source/LoreDropper/LoreDropper.cs" id="1_gkjwv"]
 [ext_resource type="Texture2D" uid="uid://cucravwqhx6wm" path="res://Content/LoreDropper/LoreDropper.png" id="2_hll8c"]
 [ext_resource type="Texture2D" uid="uid://bhjb5eeeeybt7" path="res://Content/LoreDropper/Janitor.png" id="2_tg2h5"]
 [ext_resource type="FontFile" uid="uid://cgfvrtvuhtotb" path="res://Content/Fonts/Roboto/Roboto-Regular.ttf" id="3_d0072"]
+[ext_resource type="Texture2D" uid="uid://cq43ldft7boc2" path="res://Content/LoreDropper/JerryScroll.png" id="4_qseqv"]
+[ext_resource type="Texture2D" uid="uid://cngx0s6bm7ebk" path="res://Content/LoreDropper/Socks.png" id="5_p0ty0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_86t14"]
 atlas = ExtResource("2_tg2h5")
@@ -24,6 +26,26 @@ region = Rect2(48, 0, 16, 16)
 [sub_resource type="AtlasTexture" id="AtlasTexture_qpytx"]
 atlas = ExtResource("2_hll8c")
 region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8yf3e"]
+atlas = ExtResource("4_qseqv")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3xcg3"]
+atlas = ExtResource("5_p0ty0")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_708m4"]
+atlas = ExtResource("5_p0ty0")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ydqpb"]
+atlas = ExtResource("5_p0ty0")
+region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pcuhv"]
+atlas = ExtResource("5_p0ty0")
+region = Rect2(16, 16, 16, 16)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_jtas0"]
 animations = [{
@@ -51,10 +73,35 @@ animations = [{
 "loop": true,
 "name": &"Jerry",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8yf3e")
+}],
+"loop": true,
+"name": &"JerryScroll",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3xcg3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_708m4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ydqpb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pcuhv")
+}],
+"loop": true,
+"name": &"Socks",
+"speed": 5.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1mynk"]
-size = Vector2(32, 16)
+size = Vector2(32, 24)
 
 [node name="LoreDropper" type="CharacterBody2D"]
 collision_layer = 64
@@ -63,8 +110,8 @@ script = ExtResource("1_gkjwv")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_jtas0")
-animation = &"Jerry"
-frame_progress = 0.789384
+animation = &"Socks"
+frame_progress = 0.900357
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 
@@ -73,6 +120,7 @@ collision_layer = 64
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, 4)
 shape = SubResource("RectangleShape2D_1mynk")
 
 [node name="Container" type="HBoxContainer" parent="."]
@@ -80,8 +128,8 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = -8.0
-offset_top = -56.0
-offset_right = 120.0
+offset_top = -40.0
+offset_right = 88.0
 offset_bottom = -8.0
 grow_vertical = 0
 

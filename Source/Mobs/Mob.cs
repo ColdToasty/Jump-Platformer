@@ -17,10 +17,12 @@ public partial class Mob : CharacterBody2D
 
 	private Random random;
 
+
 	protected AnimatedSprite2D animatedSprite;
 
-    protected enum MobState { Move, Attack}
+    protected enum MobState { Move, Attack, Idle}
 
+    [Export]
     protected MobState mobState;
 
     protected Area2D attackRange;
@@ -117,6 +119,10 @@ public partial class Mob : CharacterBody2D
                     moveLeft = true;
                 }
             }
+        }
+        else
+        {
+            animatedSprite.Play("Idle");
         }
         
     }

@@ -26,7 +26,12 @@ public partial class LevelBase : Node2D
 
 	private Vector2 diagonalSlideVelocity;
 
+    public bool PlayerWon { get; private set; }
 
+
+    private Godot.Collections.Array<Node> loreDroppers;
+
+    private LoreDropper janitor;
 
     public override void _Ready()
 	{
@@ -47,6 +52,23 @@ public partial class LevelBase : Node2D
         quickSandTiles = new HashSet<Vector2I>();
         slowTiles = new HashSet<Vector2I>();
         diagonalTiles = new HashSet<Vector2I>();
+        PlayerWon = false;
+
+
+
+        Node2D loreDroppersList = this.GetNode<Node2D>("LoreDroppers");
+
+        loreDroppers = loreDroppersList.GetChildren();
+
+        foreach (Node2D node in loreDroppers)
+        {
+            LoreDropper loreDropper = (LoreDropper)node;
+
+            if(loreDropper.LoreDropperType == LoreDropper.LoreDropperName.Janitor)
+            {
+                janitor = loreDropper;
+            }
+        }
 
         foreach (Vector2I tile in tilesUsed)
 		{
@@ -104,36 +126,94 @@ public partial class LevelBase : Node2D
 		Vector2I PlayerPosition = (Vector2I)PositionCalculator.GetPosition(player.GlobalPosition).Item1;
 		Vector2I TileUnderPlayerPosition = new Vector2I(PlayerPosition.X, PlayerPosition.Y + 1);
 
-		//Check to see if player is on a sliding tile
+        Vector2I RightTileNextToPlayerPosition = new Vector2I(PlayerPosition.X + 1, PlayerPosition.Y);
+        Vector2I LeftTileNextToPlayerPosition = new Vector2I(PlayerPosition.X - 1, PlayerPosition.Y);
+
+        Vector2I LeftTileUnderPlayerPosition = new Vector2I(PlayerPosition.X - 1, PlayerPosition.Y + 1);
+        Vector2I RightTileUnderPlayerPosition = new Vector2I(PlayerPosition.X + 1, PlayerPosition.Y + 1);
+
+        //Check to see if player is on a sliding tile and not a diagonal tile
         if (slidingTiles.Contains(TileUnderPlayerPosition) && !diagonalTiles.Contains(TileUnderPlayerPosition))
 		{
-			if(player.FaceDirection == Player.Direction.Left)
-			{
-                collisionTileLayer.GetCellTileData(TileUnderPlayerPosition).SetConstantLinearVelocity(0, -slideVelocity);
+            if (player.FaceDirection == Player.Direction.Left)
+            {
+                if (tilesUsed.Contains(LeftTileNextToPlayerPosition))
+                {
+                    //check if there is a tile on the left of the player
+                    if ((bool)collisionTileLayer.GetCellTileData(LeftTileNextToPlayerPosition).GetCustomData("Slide") == true && collisionTileLayer.GetCellTileData(TileUnderPlayerPosition).GetConstantLinearVelocity(0) != Vector2.Zero)
+                    {
+                        collisionTileLayer.GetCellTileData(TileUnderPlayerPosition).SetConstantLinearVelocity(0, Vector2.Zero);
+                        GD.Print("No Slide Left");
+                    }
+                }
+                else if (collisionTileLayer.GetCellTileData(TileUnderPlayerPosition).GetConstantLinearVelocity(0) != -slideVelocity)
+                {
+                    collisionTileLayer.GetCellTileData(TileUnderPlayerPosition).SetConstantLinearVelocity(0, -slideVelocity);
+                    GD.Print("Slide Left");
+                }
+
+                if(tilesUsed.Contains(LeftTileUnderPlayerPosition) && !tilesUsed.Contains(LeftTileNextToPlayerPosition))
+                {
+                    if ((bool)collisionTileLayer.GetCellTileData(LeftTileUnderPlayerPosition).GetCustomData("Slide") == true && collisionTileLayer.GetCellTileData(LeftTileUnderPlayerPosition).GetConstantLinearVelocity(0) != -slideVelocity)
+                    {
+                        collisionTileLayer.GetCellTileData(LeftTileUnderPlayerPosition).SetConstantLinearVelocity(0, -slideVelocity);
+                        GD.Print("No Slide Left");
+                    }
+                }
+
             }
             else if (player.FaceDirection == Player.Direction.Right)
             {
-                collisionTileLayer.GetCellTileData(TileUnderPlayerPosition).SetConstantLinearVelocity(0, slideVelocity);
+                if (tilesUsed.Contains(RightTileNextToPlayerPosition))
+                {
+                    if ((bool)collisionTileLayer.GetCellTileData(RightTileNextToPlayerPosition).GetCustomData("Slide") == true && collisionTileLayer.GetCellTileData(TileUnderPlayerPosition).GetConstantLinearVelocity(0) != Vector2.Zero)
+                    {
+                        collisionTileLayer.GetCellTileData(TileUnderPlayerPosition).SetConstantLinearVelocity(0, Vector2.Zero);
+                        GD.Print("No Slide right");
+                    }
+                }
+
+                else if (collisionTileLayer.GetCellTileData(TileUnderPlayerPosition).GetConstantLinearVelocity(0) != slideVelocity)
+                {
+                    collisionTileLayer.GetCellTileData(TileUnderPlayerPosition).SetConstantLinearVelocity(0, slideVelocity);
+                    GD.Print("Slide Right");
+                }
+
+                if (tilesUsed.Contains(RightTileUnderPlayerPosition) && !tilesUsed.Contains(RightTileNextToPlayerPosition))
+                {
+                    if ((bool)collisionTileLayer.GetCellTileData(RightTileUnderPlayerPosition).GetCustomData("Slide") == true && collisionTileLayer.GetCellTileData(RightTileUnderPlayerPosition).GetConstantLinearVelocity(0) != slideVelocity)
+                    {
+                        collisionTileLayer.GetCellTileData(RightTileUnderPlayerPosition).SetConstantLinearVelocity(0, slideVelocity);
+                        GD.Print("No Slide Left");
+                    }
+                }
             }
-
 		}
 
-		if (slidingTiles.Contains(TileUnderPlayerPosition) && diagonalTiles.Contains(TileUnderPlayerPosition))
-		{
+        //On diagonal slidey tile
+        if (slidingTiles.Contains(TileUnderPlayerPosition) && diagonalTiles.Contains(TileUnderPlayerPosition))
+        {
             player.CanMove = false;
-			if ((bool)collisionTileLayer.GetCellTileData(TileUnderPlayerPosition).GetCustomData("LeftDiagonal") == true)
-			{
-				player.FaceDirection = Player.Direction.Left;
-			}
-			else
-			{
-				player.FaceDirection = Player.Direction.Right;
-			}
+            player.IsOnDiagonal = true;
         }
-		else
-		{
-			player.CanMove = true;
-		}
+        else
+        {
+            player.IsOnDiagonal = false;
+            player.CanMove = true;
+ 
+        }
+
+
+
+
+        if(player.CurrentCharacterState == Player.CharacterState.FallFlat)
+        {
+            if (tilesUsed.Contains(TileUnderPlayerPosition))
+            {
+                player.Velocity = new Vector2(0, player.Velocity.Y);
+                
+            }
+        }
 
     }
 
@@ -152,5 +232,14 @@ public partial class LevelBase : Node2D
 		this.RemoveChild(playerJumpEffect);
     }
 
-	
+	public void _on_socks_claimed()
+    {
+        PlayerWon = true;
+        janitor.PlayerWon = true;
+        janitor.ResetDialog();
+        player.FaceDirection = Player.Direction.Portal;
+        player.animatedSprite.Play("Portal");
+        player.GlobalPosition = new Vector2(-384, 472);
+
+    }
 }

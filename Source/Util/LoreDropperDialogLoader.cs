@@ -18,15 +18,23 @@ namespace Platformer.Source.Util
          
             foreach(LoreDropperDialog dialog in dialogs)
             {
-
+                //If we have the loreDropper name already present
                 if (NameDialogs.ContainsKey(dialog.Name))
                 {
-                    NameDialogs[dialog.Name].Add(dialog.ID, dialog);
-
+                    //checks if the dialog hasn't already been added
+                    if (!NameDialogs[dialog.Name].ContainsKey(dialog.ID))
+                    {
+                        //add it 
+                        NameDialogs[dialog.Name].Add(dialog.ID, dialog);
+                    }
+  
                 }
+                //if it is a new loreDropper
                 else
                 {
+                    //Create a new dictionary
                     NameDialogs.Add(dialog.Name, new Dictionary<string, LoreDropperDialog>());
+                    //add the dialog to the new loredroper 
                     NameDialogs[dialog.Name].Add(dialog.ID, dialog);
                 }
             }

@@ -255,13 +255,12 @@ wallKnockBackSpeed = 95.0
 wallKnockDownVelocity = 300.0
 wallKnockDownSpeed = 100.0
 increaseJumpPowerAmount = 6
+fallFlatValue = 35.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -1)
 sprite_frames = SubResource("SpriteFrames_2krhu")
-animation = &"Jump"
-frame = 1
-frame_progress = 1.0
+animation = &"FallFlatRight"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-0.5, 3.5)

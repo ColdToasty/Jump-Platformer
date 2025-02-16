@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://ctbm18wfgpjxc"]
+[gd_scene load_steps=21 format=3 uid="uid://ctbm18wfgpjxc"]
 
 [ext_resource type="PackedScene" uid="uid://buxndiiiw0s17" path="res://Source/Mobs/mob.tscn" id="1_hkkep"]
 [ext_resource type="Texture2D" uid="uid://ndwh37s63pwg" path="res://Content/Mobs/Magician.png" id="3_mkvbt"]
@@ -34,6 +34,10 @@ region = Rect2(32, 48, 16, 16)
 [sub_resource type="AtlasTexture" id="AtlasTexture_f7thv"]
 atlas = ExtResource("3_mkvbt")
 region = Rect2(48, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3rny0"]
+atlas = ExtResource("3_mkvbt")
+region = Rect2(0, 64, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_opqhw"]
 atlas = ExtResource("3_mkvbt")
@@ -105,6 +109,14 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_3rny0")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_opqhw")
 }, {
 "duration": 1.0,
@@ -138,9 +150,10 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Magician" instance=ExtResource("1_hkkep")]
+[node name="Magician" node_paths=PackedStringArray("animatedSprite") instance=ExtResource("1_hkkep")]
+animatedSprite = NodePath("AnimatedSprite2D")
 MobType = 1
 
 [node name="AnimatedSprite2D" parent="." index="0"]
 sprite_frames = SubResource("SpriteFrames_355nh")
-animation = &"AttackRight"
+animation = &"Idle"

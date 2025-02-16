@@ -3,6 +3,7 @@ using Platformer.Source.Util;
 using Platformer.Source.Util.JsonContainers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class LoreDropper : CharacterBody2D
 {
@@ -20,10 +21,10 @@ public partial class LoreDropper : CharacterBody2D
 
     private Timer timer;
 
-    public enum LoreDropperName {JerryScroll, JerryNotebook, Jerry, Janitor}
+    public enum LoreDropperName {Peter, Ellie, Nathan, Izzy, Sarah, JerryScroll, JerryNotebook, Jerry, Janitor, Socks}
 
     [Export]
-    private LoreDropperName LoreDropperType;
+    public LoreDropperName LoreDropperType { get; private set; }
 
     
     private int currentDialogIndex = 0;
@@ -31,7 +32,10 @@ public partial class LoreDropper : CharacterBody2D
     private Dictionary<string, LoreDropperDialog> loreDropperDialog;
 
     private string currentDialogID;
-   
+
+    public bool PlayerWon = false;
+    [Signal]
+    public delegate void SocksClaimedEventHandler();
 
     public override void _Ready()
     {
@@ -46,19 +50,28 @@ public partial class LoreDropper : CharacterBody2D
 
         timer = this.GetNode<Timer>("Timer");
 
-
         label.Visible = false;
         showLabel = false;
         pauseStartLabel = false; 
 
-        LoreDropperDialogLoader.LoadLoreDropperDialogs();
+
+         LoreDropperDialogLoader.LoadLoreDropperDialogs();
+        
+
         loreDropperDialog = LoreDropperDialogLoader.NameDialogs[LoreDropperType];
+
+
 
         currentDialogID = loreDropperDialog[LoreDropperType.ToString() + "_" + currentDialogIndex.ToString("D2")].ID;
 
         label.Text = loreDropperDialog[currentDialogID].Dialog;
         switch (LoreDropperType)
         {
+            case LoreDropperName.JerryScroll:
+                //get janitor dialogs from level
+                animatedSprite.Play("JerryScroll");
+                break;
+
             case LoreDropperName.Jerry:
 
                 //get jerry dialogs from level
@@ -71,6 +84,11 @@ public partial class LoreDropper : CharacterBody2D
                 animatedSprite.Play("Janitor");
                 break;
 
+            case LoreDropperName.Socks:
+                //get janitor dialogs from level
+                animatedSprite.Play("Socks");
+                break;
+
         }
     }
 
@@ -81,7 +99,7 @@ public partial class LoreDropper : CharacterBody2D
 
     }
 
-    private void ResetDialog()
+    public void ResetDialog()
     {
         currentDialogIndex = 0;
         SetCurrentDialogIndex();
@@ -89,11 +107,20 @@ public partial class LoreDropper : CharacterBody2D
 
     private void SetCurrentDialogIndex()
     {
-        currentDialogID = loreDropperDialog[LoreDropperType.ToString() + "_" + currentDialogIndex.ToString("D2")].ID;
+        if(this.LoreDropperType == LoreDropperName.Janitor && PlayerWon == true)
+        {
+            currentDialogID = loreDropperDialog[LoreDropperType.ToString() + "_"  +"Won" + "_" + currentDialogIndex.ToString("D2")].ID;
+        }
+        else
+        {
+            currentDialogID = loreDropperDialog[LoreDropperType.ToString() + "_" + currentDialogIndex.ToString("D2")].ID;
+        }
+
         label.Text = loreDropperDialog[currentDialogID].Dialog;
         label.VisibleRatio = -1;
        
     }
+
 
 
     public override void _PhysicsProcess(double delta)
@@ -106,7 +133,13 @@ public partial class LoreDropper : CharacterBody2D
                 if (loreDropperDialog[currentDialogID].NextDialogID == null)
                 {
                     timer.Start(6);
+                    if (LoreDropperType == LoreDropperName.Socks)
+                    {
+                        EmitSignal("SocksClaimed");
+                    }
+
                     pauseStartLabel = true;
+
                 }
                 else
                 {
@@ -160,7 +193,9 @@ public partial class LoreDropper : CharacterBody2D
             }
             else
             {
-                ResetDialog();
+
+                    ResetDialog();
+
             }
         }
 

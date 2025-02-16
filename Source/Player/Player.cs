@@ -79,7 +79,14 @@ public partial class Player : CharacterBody2D
     private int increaseJumpPowerAmount;
 
 
-    private AnimatedSprite2D animatedSprite;
+    [Export]
+    private float fallFlatValue;
+
+    private float currentFallFlatValue;
+
+    private int fallFlatEffectCount;
+
+    public AnimatedSprite2D animatedSprite;
     private Area2D collisionDetectionArea;
     private CollisionShape2D collisionShape;
     private AudioStreamPlayer2D audioStreamPlayer;
@@ -93,7 +100,11 @@ public partial class Player : CharacterBody2D
     private bool knockDown;
     private bool wallKnockback;
     private bool ceilingHit;
-    private bool canMove; 
+    private bool canMove;
+    public bool IsOnDiagonal;
+
+    private bool magicianHit = false;
+
     public bool CanMove
     {
         get { return canMove; }
@@ -129,9 +140,14 @@ public partial class Player : CharacterBody2D
         wallKnockback = false;
         canMove = true;
         ceilingHit = false;
+        IsOnDiagonal = false;
         hitDirection = Vector2.Zero;
         random = new Random();
 
+
+
+        fallFlatEffectCount = 0;
+        currentFallFlatValue = 0;
         CurrentJumpVelocity = MinimumJumpVelocity;
 
     }
@@ -171,24 +187,29 @@ public partial class Player : CharacterBody2D
 
             if (FaceDirection != Direction.Portal)
             {
-
                 // Add the gravity.
                 if (!IsOnFloor())
                 {
                     velocity += GetGravityValue() * (float)delta;
                     if (velocity.Y > 0)
                     {
-                        CurrentCharacterState = CharacterState.Falling;
+                    
+                        currentFallFlatValue++;
+                        if (currentFallFlatValue >= fallFlatValue)
+                        {
+                            this.CurrentCharacterState = CharacterState.FallFlat;
+                        }
+                        else
+                        {
+                            CurrentCharacterState = CharacterState.Falling;
+                        }
+
                     }
                     else
                     {
                         CurrentCharacterState = CharacterState.Jumping;
                     }
 
-                    if (ceilingHit)
-                    {
-
-                    }
                 }
                 else
                 {
@@ -200,7 +221,20 @@ public partial class Player : CharacterBody2D
 
                     knockDown = false;
 
-                    CurrentCharacterState = CharacterState.Grounded;
+                    if(CurrentCharacterState == CharacterState.FallFlat)
+                    {
+                    }
+                    else
+                    {
+                        CurrentCharacterState = CharacterState.Grounded;
+
+                        if (!IsOnDiagonal)
+                        {
+                            currentFallFlatValue = 0;
+                            fallFlatEffectCount = 0;
+                        }
+                    }
+
 
                 }
 
@@ -270,7 +304,7 @@ public partial class Player : CharacterBody2D
                         {
 
                             velocity.X = direction.X * MoveSpeed;
-
+                
 
                             if (direction.X < 0)
                             {
@@ -284,6 +318,7 @@ public partial class Player : CharacterBody2D
                         else if (direction == Vector2.Zero && !Input.IsActionPressed("Jump"))
                         {
                             velocity.X = Mathf.MoveToward(Velocity.X, 0, MoveSpeed);
+                   
                             if (CurrentCharacterState == CharacterState.Grounded)
                             {
                                 if (FaceDirection == Direction.Left)
@@ -310,10 +345,7 @@ public partial class Player : CharacterBody2D
                         // Handle Jump.
                         if (Input.IsActionPressed("Jump"))
                         {
-                            if (animatedSprite.IsPlaying())
-                            {
 
-                            }
                             animatedSprite.Play("Jump");
                             velocity.X = Mathf.MoveToward(Velocity.X, 0, JumpSpeed);
                             CurrentJumpVelocity -= increaseJumpPowerAmount;
@@ -348,18 +380,46 @@ public partial class Player : CharacterBody2D
                     }
                     else
                     {
-                        if (FaceDirection == Direction.Left)
+                        if (CurrentCharacterState == CharacterState.FallFlat)
                         {
-                            animatedSprite.Play("JumpLeft");
-                        }
-                        else if (FaceDirection == Direction.Right)
+                            //Need 
+                            //play fallflat animationm
+                            if (this.FaceDirection == Direction.Left)
+                            {
+                                animatedSprite.Play("FallFlatLeft");
+                            }
+                            else
+                            {
+                                animatedSprite.Play("FallFlatRight");
+                            }
+
+
+                            Vector2 direction = Input.GetVector("MoveLeft", "MoveRight", "MoveUp", "MoveDown");
+
+                        
+                            if (direction != Vector2.Zero) {
+                                CurrentCharacterState = CharacterState.Grounded;
+                            }
+                            
+
+
+
+                    }
+                    else
                         {
-                            animatedSprite.Play("JumpRight");
+                            if (FaceDirection == Direction.Left)
+                            {
+                                animatedSprite.Play("JumpLeft");
+                            }
+                            else if (FaceDirection == Direction.Right)
+                            {
+                                animatedSprite.Play("JumpRight");
+                            }
                         }
+
 
                     }
                 }
-
 
 
 
@@ -460,11 +520,32 @@ public partial class Player : CharacterBody2D
 
 
         }
-        if (collisionNormal != new Vector2(0, -1))
+        if (collisionNormal.Y == 0 && (CurrentCharacterState != CharacterState.Grounded && CurrentCharacterState != CharacterState.FallFlat))
         {
             audioStreamPlayer.Stream = playerSoundEffects["WallHit"];
             audioStreamPlayer.Play();
         }
+
+        else if(collisionNormal.Y == -1 && (CurrentCharacterState != CharacterState.Grounded))
+        {
+            if(CurrentCharacterState == CharacterState.FallFlat)
+            {
+                audioStreamPlayer.Stream = playerSoundEffects["FallFlat"];
+                //Need to only play it once
+                if(fallFlatEffectCount < 3)
+                {
+                    audioStreamPlayer.Play();
+                    fallFlatEffectCount++;
+                }
+
+            }
+        }
+        else if (collisionNormal.Y == 1 && (CurrentCharacterState != CharacterState.Grounded))
+        {
+            audioStreamPlayer.Stream = playerSoundEffects["WallHit"];
+            audioStreamPlayer.Play();
+        }
+
     }
 
 
@@ -482,9 +563,11 @@ public partial class Player : CharacterBody2D
             FaceDirection = Direction.Portal;
             collisionDetectionArea.SetDeferred("monitoring", false);
             collisionShape.SetDeferred("disabled", true);
+            magicianHit = true;
         }
         else
         {
+            CurrentCharacterState = CharacterState.Grounded;
             audioStreamPlayer.Stream = playerSoundEffects["WallHit"];
             audioStreamPlayer.Play();
             knockback = true;
@@ -503,36 +586,42 @@ public partial class Player : CharacterBody2D
             FaceDirection = Direction.Default;
             collisionDetectionArea.SetDeferred("monitoring", true);
             collisionShape.SetDeferred("disabled", false);
-            Vector2 playerTilePosition = PositionCalculator.GetPosition(this.GlobalPosition).Item1;
 
-            HashSet<Vector2I> usedCells = this.GetParent<LevelBase>().GetSurroundingCellsInTileSizeCoOrds().ToHashSet<Vector2I>();
-
-            Vector2I teleportedPosition = Vector2I.Zero;
-            int y = 4;
-
-            while (true)
+            if (magicianHit)
             {
-                int x;
-                if (hitDirection == Vector2.Right)
-                {
-                    x = random.Next(2, 4);
-                }
-                else
-                {
-                    x = random.Next(-4, -1);
-                }
-                //Check if there is a tile present
-                teleportedPosition = new Vector2I((int)playerTilePosition.X + x, (int)playerTilePosition.Y + y);
-    
-                if (!usedCells.Contains(teleportedPosition))
-                {
-                    Vector2 newPosition  = new Vector2(teleportedPosition.X * PositionCalculator.TileSize, teleportedPosition.Y * PositionCalculator.TileSize);
+                Vector2 playerTilePosition = PositionCalculator.GetPosition(this.GlobalPosition).Item1;
 
-                    this.GlobalPosition = newPosition;
-                    break;
+                HashSet<Vector2I> usedCells = this.GetParent<LevelBase>().GetSurroundingCellsInTileSizeCoOrds().ToHashSet<Vector2I>();
+
+                Vector2I teleportedPosition = Vector2I.Zero;
+                int y = 4;
+
+                while (true)
+                {
+                    int x;
+                    if (hitDirection == Vector2.Right)
+                    {
+                        x = random.Next(2, 4);
+                    }
+                    else
+                    {
+                        x = random.Next(-4, -1);
+                    }
+                    //Check if there is a tile present
+                    teleportedPosition = new Vector2I((int)playerTilePosition.X + x, (int)playerTilePosition.Y + y);
+
+                    if (!usedCells.Contains(teleportedPosition))
+                    {
+                        Vector2 newPosition = new Vector2(teleportedPosition.X * PositionCalculator.TileSize, teleportedPosition.Y * PositionCalculator.TileSize);
+
+                        this.GlobalPosition = newPosition;
+                        break;
+                    }
+
                 }
-      
             }
+            magicianHit = false;
+
 
 
 

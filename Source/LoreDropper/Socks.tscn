@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://runwr1cswexs"]
+
+[ext_resource type="PackedScene" uid="uid://rt4f8quufofn" path="res://Source/LoreDropper/LoreDropper.tscn" id="1_fx5xl"]
+
+[node name="Socks" instance=ExtResource("1_fx5xl")]

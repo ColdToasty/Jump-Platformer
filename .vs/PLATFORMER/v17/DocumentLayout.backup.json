@@ -11,12 +11,16 @@
       "RelativeMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|solutionrelative:source\\loredropper\\loredropper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|d:\\github\\jump-platformer\\source\\util\\jsoncontainerclass\\loredroppercontainer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|solutionrelative:source\\util\\jsoncontainerclass\\loredroppercontainer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|d:\\github\\jump-platformer\\source\\levels\\levelbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|solutionrelative:source\\levels\\levelbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|d:\\github\\jump-platformer\\source\\player\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|solutionrelative:source\\player\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|d:\\github\\jump-platformer\\source\\mobs\\mob.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{61F46C80-EB5C-4039-A2DD-54482B4B5183}|Platformer.csproj|solutionrelative:source\\mobs\\mob.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -28,6 +32,19 @@
           "DockedWidth": 678,
           "SelectedChildIndex": 8,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Mob.cs",
+              "DocumentMoniker": "D:\\Github\\Jump-Platformer\\Source\\Mobs\\Mob.cs",
+              "RelativeDocumentMoniker": "Source\\Mobs\\Mob.cs",
+              "ToolTip": "D:\\Github\\Jump-Platformer\\Source\\Mobs\\Mob.cs",
+              "RelativeToolTip": "Source\\Mobs\\Mob.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAAcwHwAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-02T05:26:24.021Z",
+              "IsPinned": true
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:1:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
@@ -58,28 +75,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "LoreDropperContainer.cs",
-              "DocumentMoniker": "D:\\Github\\Jump-Platformer\\Source\\Util\\JsonContainerClass\\LoreDropperContainer.cs",
-              "RelativeDocumentMoniker": "Source\\Util\\JsonContainerClass\\LoreDropperContainer.cs",
-              "ToolTip": "D:\\Github\\Jump-Platformer\\Source\\Util\\JsonContainerClass\\LoreDropperContainer.cs",
-              "RelativeToolTip": "Source\\Util\\JsonContainerClass\\LoreDropperContainer.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA8AAAAiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-13T23:44:35.332Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "LoreDropperDialogs.json",
               "DocumentMoniker": "D:\\Github\\Jump-Platformer\\Source\\Data\\LoreDropperDialogs.json",
               "RelativeDocumentMoniker": "Source\\Data\\LoreDropperDialogs.json",
               "ToolTip": "D:\\Github\\Jump-Platformer\\Source\\Data\\LoreDropperDialogs.json",
               "RelativeToolTip": "Source\\Data\\LoreDropperDialogs.json",
-              "ViewState": "AgIAAKgAAAAAAAAAAAAAAIEAAABNAAAAAAAAAA==",
+              "ViewState": "AgIAADcBAAAAAAAAAAAswEoBAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-01-13T03:06:40.358Z",
+              "WhenOpened": "2025-02-14T08:01:17.696Z",
               "EditorCaption": ""
             },
             {
@@ -90,23 +94,33 @@
               "RelativeDocumentMoniker": "Source\\LoreDropper\\LoreDropper.cs",
               "ToolTip": "D:\\Github\\Jump-Platformer\\Source\\LoreDropper\\LoreDropper.cs",
               "RelativeToolTip": "Source\\LoreDropper\\LoreDropper.cs",
-              "ViewState": "AgIAAFAAAAAAAAAAAAAwwHAAAAAlAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-13T02:50:26.489Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-14T08:00:12.347Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "LevelBase.cs",
               "DocumentMoniker": "D:\\Github\\Jump-Platformer\\Source\\Levels\\LevelBase.cs",
               "RelativeDocumentMoniker": "Source\\Levels\\LevelBase.cs",
               "ToolTip": "D:\\Github\\Jump-Platformer\\Source\\Levels\\LevelBase.cs",
               "RelativeToolTip": "Source\\Levels\\LevelBase.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAQwAEAAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAAG4AAAAAAAAAAAAwwIoAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-05T01:19:18.791Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-02T04:08:33.267Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Player.cs",
+              "DocumentMoniker": "D:\\Github\\Jump-Platformer\\Source\\Player\\Player.cs",
+              "RelativeDocumentMoniker": "Source\\Player\\Player.cs",
+              "ToolTip": "D:\\Github\\Jump-Platformer\\Source\\Player\\Player.cs",
+              "RelativeToolTip": "Source\\Player\\Player.cs",
+              "ViewState": "AgIAALoAAAAAAAAAAIAwwIEBAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-02T03:51:54.881Z"
             }
           ]
         }

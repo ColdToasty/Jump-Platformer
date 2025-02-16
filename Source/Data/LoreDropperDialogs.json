@@ -10,7 +10,7 @@
     {
       "ID": "Janitor_01",
       "Name": "Janitor",
-      "Dialog": "They say he or she who shows up after closing hours to retrieve their socks at the summit is the one who will claim unknown, but awesome power!",
+      "Dialog": "They say he or she who shows up after closing hours to retrieve their socks at the summit is the one who will claim UNKNOWN, but AWESOME power!",
       "DialogPlaySpeed": "Slow",
       "NextDialogID": "Janitor_02"
     },
@@ -64,6 +64,13 @@
       "NextDialogID": null
     },
 
+
+
+
+
+
+    ///JERRY SCROLL
+
     {
       "ID": "JerryScroll_00",
       "Name": "JerryScroll",
@@ -109,6 +116,7 @@
     },
 
 
+    /// JERRY NOTEBOOK
     {
       "ID": "JerryNotebook_00",
       "Name": "JerryNotebook",
@@ -209,6 +217,10 @@
       "DialogPlaySpeed": "Slow",
       "NextDialogID": null
     },
+
+
+    /// JERRY
+
     {
       "ID": "Jerry_00",
       "Name": "Jerry",
@@ -261,14 +273,14 @@
     {
       "ID": "Jerry_07",
       "Name": "Jerry",
-      "Dialog": "I thought my mind was my greatest ally",
+      "Dialog": "I thought my mind unbreakable, unbending...",
       "DialogPlaySpeed": "Default",
       "NextDialogID": "Jerry_08"
     },
     {
       "ID": "Jerry_08",
       "Name": "Jerry",
-      "Dialog": "But, being stranded here... Alone. All by myself.",
+      "Dialog": "But, being stranded here... Alone. All by myself...",
       "DialogPlaySpeed": "Default",
       "NextDialogID": "Jerry_09"
     },
@@ -289,10 +301,143 @@
     {
       "ID": "Jerry_11",
       "Name": "Jerry",
-      "Dialog": "And butter. Butter is...",
+      "Dialog": "And butter? Butter is...",
       "DialogPlaySpeed": "Slow",
       "NextDialogID": null
+    },
 
+
+    /// SOCKS
+    {
+      "ID": "Socks_00",
+      "Name": "Socks",
+      "Dialog": "I'm suprised you've mananaged to reach the summit, to finally reach me....",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Socks_01"
+    },
+    {
+      "ID": "Socks_01",
+      "Name": "Socks",
+      "Dialog": "I never expected anyone to reach me after Jerry succumbed to butter...",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Socks_02"
+    },
+    {
+      "ID": "Socks_02",
+      "Name": "Socks",
+      "Dialog": "You have rose and you have fallen, but the most important thing is...",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Socks_03"
+    },
+    {
+      "ID": "Socks_03",
+      "Name": "Socks",
+      "Dialog": "You got back up, and that has made all the difference.",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Socks_04"
+    },
+    {
+      "ID": "Socks_04",
+      "Name": "Socks",
+      "Dialog": "I then must hereby present you with the UNKNOWN, but AWESOME power!",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Socks_05"
+    },
+    {
+      "ID": "Socks_05",
+      "Name": "Socks",
+      "Dialog": "GET READY! AND THANK THE JANITOR.... AHHHHHHHHH.",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": null
+    },
+
+
+    //Janitor Won
+    {
+      "ID": "Janitor_Won_00",
+      "Name": "Janitor",
+      "Dialog": "Hey you. You've finally arrived. I was right wasn't I?",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Janitor_Won_01"
+    },
+    {
+      "ID": "Janitor_Won_01",
+      "Name": "Janitor",
+      "Dialog": "You are him. You really did it!",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Janitor_Won_02"
+    },
+    {
+      "ID": "Janitor_Won_02",
+      "Name": "Janitor",
+      "Dialog": "You claimed the UNKNOWN, but AWESOME power!",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Janitor_Won_03"
+    },
+    {
+      "ID": "Janitor_Won_03",
+      "Name": "Janitor",
+      "Dialog": "You claimed the Socks when no one else could...",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Janitor_Won_04"
+    },
+
+    {
+      "ID": "Janitor_Won_04",
+      "Name": "Janitor",
+      "Dialog": "Finally... My work has finally bore fruit and I can finally focus on cleaning.",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Janitor_Won_05"
+    },
+    {
+      "ID": "Janitor_Won_05",
+      "Name": "Janitor",
+      "Dialog": "Congratulations. After all you're hardship and perseverance.",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Janitor_Won_06"
+    },
+    {
+      "ID": "Janitor_Won_06",
+      "Name": "Janitor",
+      "Dialog": "You deserve this.",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Janitor_Won_07"
+    },
+    {
+      "ID": "Janitor_Won_07",
+      "Name": "Janitor",
+      "Dialog": "What's this, how do you use the UNKNOWN, but AWESOME power?",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Janitor_Won_08"
+    },
+    {
+      "ID": "Janitor_Won_08",
+      "Name": "Janitor",
+      "Dialog": "You just wear the socks, it's that easy!",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Janitor_Won_09"
+    },
+    {
+      "ID": "Janitor_Won_09",
+      "Name": "Janitor",
+      "Dialog": "Did you think you would gain magical power that let's you bend reality to your will?'",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Janitor_Won_10"
+    },
+    {
+      "ID": "Janitor_Won_10",
+      "Name": "Janitor",
+      "Dialog": "How preposterous and foolish! You have something even greater!",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": "Janitor_Won_11"
+
+    },
+    {
+      "ID": "Janitor_Won_11",
+      "Name": "Janitor",
+      "Dialog": "Try it with sandals, and now get out or reach the top again.",
+      "DialogPlaySpeed": "Slow",
+      "NextDialogID": null
     }
   ]
 }
